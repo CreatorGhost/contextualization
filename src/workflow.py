@@ -15,7 +15,10 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.graph import StateGraph, END
 
-from .config import GENERATION_MODEL, MODEL_TEMPERATURE, OPENAI_API_KEY, MAX_RETRIES
+from .config import (
+    GENERATION_MODEL, MODEL_TEMPERATURE, OPENAI_API_KEY, MAX_RETRIES,
+    TARGET_TOKENS_PER_BATCH, LARGE_TEXT_THRESHOLD, TOKENS_PER_CHAR
+)
 
 logger = logging.getLogger(__name__)
 
@@ -102,25 +105,49 @@ def set_nested_value(obj: Any, path: str, value: Any) -> None:
     current_obj[parts[-1]] = value
 
 
+def extract_scenario_brands(scenario: str) -> List[str]:
+    """Extract brand/company names from a scenario.
+    
+    Looks for brand-like patterns: CamelCase, Possessives, Capitalized multi-word names.
+    """
+    brands = set()
+    
+    # 1. CamelCase words (HarvestBowls, TrendWave, ChicStyles)
+    brands.update(re.findall(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b', scenario))
+    
+    # 2. Possessive phrases (Nature's Crust, Nature's)
+    brands.update(re.findall(r"[A-Z][a-z]+'s(?:\s+[A-Z][a-z]+)?", scenario))
+    
+    # 3. Two-word capitalized names that look like brands (Fresh Taste, Blue Haven)
+    brands.update(re.findall(r'\b[A-Z][a-z]+\s+[A-Z][a-z]+\b', scenario))
+    
+    return [b for b in brands if len(b) > 3]
+
+
 def get_old_brand_names(old_scenario: str, new_scenario: str) -> List[str]:
     """Extract brand/company names from OLD scenario that shouldn't appear in output.
     
     Only looks for brand-like patterns, not generic words.
     """
-    brands = []
-    
-    # 1. CamelCase words (HarvestBowls, TrendWave, ChicStyles)
-    old_camel = set(re.findall(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b', old_scenario))
-    new_camel = set(re.findall(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b', new_scenario))
-    brands.extend(old_camel - new_camel)
-    
-    # 2. Possessive phrases (Nature's Crust, Nature's)
-    old_poss = set(re.findall(r"[A-Z][a-z]+'s(?:\s+[A-Z][a-z]+)?", old_scenario))
-    new_poss = set(re.findall(r"[A-Z][a-z]+'s(?:\s+[A-Z][a-z]+)?", new_scenario))
-    brands.extend(old_poss - new_poss)
+    old_brands = set(extract_scenario_brands(old_scenario))
+    new_brands = set(extract_scenario_brands(new_scenario))
     
     # Return lowercase versions for case-insensitive matching
-    return [b.lower() for b in brands if len(b) > 3]
+    return [b.lower() for b in (old_brands - new_brands) if len(b) > 3]
+
+
+def get_compressed_scenario_info(old_scenario: str, new_scenario: str) -> tuple[str, str]:
+    """Extract compressed brand info for prompts instead of full scenarios.
+    
+    Returns (old_brands_str, new_brands_str) for use in prompts.
+    """
+    old_brands = extract_scenario_brands(old_scenario)
+    new_brands = extract_scenario_brands(new_scenario)
+    
+    old_str = ", ".join(old_brands) if old_brands else old_scenario[:100]
+    new_str = ", ".join(new_brands) if new_brands else new_scenario[:100]
+    
+    return old_str, new_str
 
 
 def compare_structure(obj1: Any, obj2: Any, path: str = "") -> List[str]:
@@ -200,28 +227,183 @@ def parse_extract_node(state: WorkflowState) -> Dict[str, Any]:
 # NODE 2: GENERATE (LLM REWRITE)
 # =============================================================================
 
-BATCH_SIZE = 15
+def estimate_tokens(text: str) -> int:
+    """Estimate token count for a text string."""
+    return int(len(text) * TOKENS_PER_CHAR)
 
-async def rewrite_batch(llm: ChatOpenAI, batch: List[Dict], old_scenario: str, new_scenario: str, batch_num: int) -> List[str]:
-    """Rewrite a batch of texts using LLM."""
-    logger.info(f"      [Batch {batch_num}] Starting ({len(batch)} texts)...")
+
+def split_html_into_sections(html: str) -> List[str]:
+    """Split HTML content into logical sections for parallel processing.
+    
+    Splits on major block elements like <h2>, <h3>, <hr>, etc.
+    Returns list of HTML sections that can be processed independently.
+    """
+    # Split on common section delimiters
+    # Using regex to split while keeping the delimiters
+    section_patterns = [
+        r'(<h[1-3][^>]*>)',  # Headings h1-h3
+        r'(<hr\s*/?>)',       # Horizontal rules
+        r'(</ul>\s*<h)',      # End of list before heading
+    ]
+    
+    combined_pattern = '|'.join(section_patterns)
+    
+    # First, try splitting on headings and hr tags
+    parts = re.split(combined_pattern, html, flags=re.IGNORECASE)
+    
+    # Reassemble keeping delimiters with their following content
+    sections = []
+    current = ""
+    
+    for part in parts:
+        if part is None:
+            continue
+        # Check if this is a delimiter
+        if re.match(r'<h[1-3]|<hr|</ul>\s*<h', part, re.IGNORECASE):
+            if current.strip():
+                sections.append(current.strip())
+            current = part
+        else:
+            current += part
+    
+    if current.strip():
+        sections.append(current.strip())
+    
+    # If we couldn't split into meaningful sections, fall back to paragraph splits
+    if len(sections) <= 1:
+        # Split on paragraph boundaries
+        para_parts = re.split(r'(</p>\s*<p)', html, flags=re.IGNORECASE)
+        if len(para_parts) > 3:
+            # Group every 3-5 paragraphs together
+            sections = []
+            current = ""
+            para_count = 0
+            for part in para_parts:
+                current += part
+                if '</p>' in part.lower():
+                    para_count += 1
+                if para_count >= 4:
+                    sections.append(current)
+                    current = ""
+                    para_count = 0
+            if current.strip():
+                sections.append(current)
+    
+    # Filter out very small sections (pure HTML tags)
+    sections = [s for s in sections if len(s.strip()) > 50]
+    
+    return sections if len(sections) > 1 else [html]
+
+
+def create_token_aware_batches(texts: List[Dict]) -> tuple[List[List[Dict]], Dict[str, List[int]]]:
+    """Create batches based on token count, not fixed size.
+    
+    - Large HTML texts (>LARGE_TEXT_THRESHOLD chars) are split into sections
+    - Sections are processed in parallel, then reassembled
+    - Other texts are grouped to stay under TARGET_TOKENS_PER_BATCH
+    
+    Returns:
+        batches: List of text batches to process
+        split_map: Dict mapping original path -> list of batch indices for reassembly
+    """
+    batches = []
+    split_map = {}  # path -> [(batch_idx, section_idx)]
+    
+    large_texts = []
+    small_texts = []
+    
+    for t in texts:
+        if len(t["original"]) > LARGE_TEXT_THRESHOLD:
+            large_texts.append(t)
+        else:
+            small_texts.append(t)
+    
+    # Split large HTML texts into sections and create individual batches
+    # Only split texts that look like HTML (contain HTML tags)
+    for t in large_texts:
+        text = t["original"]
+        is_html = bool(re.search(r'<[a-zA-Z][^>]*>', text))  # Has HTML tags
+        
+        if is_html:
+            sections = split_html_into_sections(text)
+        else:
+            sections = [text]  # Don't split non-HTML, process as single batch
+        
+        if len(sections) > 1:
+            # Track which batches belong to this text for reassembly
+            split_map[t["path"]] = []
+            for i, section in enumerate(sections):
+                batch_idx = len(batches)
+                split_map[t["path"]].append((batch_idx, i))
+                # Create synthetic text dict for section
+                batches.append([{
+                    "path": f"{t['path']}__section_{i}",
+                    "original": section,
+                    "rewritten": None,
+                    "_parent_path": t["path"],
+                    "_section_idx": i
+                }])
+        else:
+            # Couldn't split, process as single large batch
+            batches.append([t])
+    
+    # Group small texts by token count
+    current_batch = []
+    current_tokens = 0
+    
+    for t in small_texts:
+        text_tokens = estimate_tokens(t["original"])
+        
+        # If adding this text would exceed target, start new batch
+        if current_tokens + text_tokens > TARGET_TOKENS_PER_BATCH and current_batch:
+            batches.append(current_batch)
+            current_batch = []
+            current_tokens = 0
+        
+        current_batch.append(t)
+        current_tokens += text_tokens
+    
+    # Don't forget the last batch
+    if current_batch:
+        batches.append(current_batch)
+    
+    return batches, split_map
+
+
+async def rewrite_batch(
+    llm: ChatOpenAI, 
+    batch: List[Dict], 
+    old_scenario: str, 
+    new_scenario: str, 
+    old_brands: str,
+    new_brands: str,
+    batch_num: int,
+    is_large_text: bool = False
+) -> List[str]:
+    """Rewrite a batch of texts using LLM.
+    
+    Uses compressed brand info for small batches, full scenarios for large texts.
+    """
+    logger.info(f"      [Batch {batch_num}] Starting ({len(batch)} texts, large={is_large_text})...")
     start = time.time()
     
-    # Format texts with numbers
-    text_list = "\n".join([f"[{i+1}] {t['original'][:1000]}" for i, t in enumerate(batch)])
+    # Format texts with numbers - FULL TEXT, NO SLICING
+    text_list = "\n".join([f"[{i+1}] {t['original']}" for i, t in enumerate(batch)])
     
-    # Simple, clear prompt - let LLM figure out what needs changing
-    system_prompt = f"""Rewrite texts from OLD scenario to NEW scenario.
+    # Always use full scenarios - compressed brand names caused quality issues
+    # (LLM confused "Buy One Get One" promotion as a company name)
+    scenario_info = f"OLD SCENARIO: {old_scenario}\n\nNEW SCENARIO: {new_scenario}"
+    
+    # Compact prompt to reduce tokens
+    system_prompt = f"""Rewrite texts replacing old scenario references with new ones.
 
 RULES:
-1. Replace ALL references to old scenario (company names, brands, products, emails, URLs with old names, metrics, KPIs)
-2. Keep the same structure, tone, length, and formatting (HTML/markdown intact)
-3. If something is generic (not scenario-specific), keep it unchanged
-4. Return each text prefixed with [1], [2], [3], etc. on its own line
+1. Replace ALL old references (brands, companies, emails, URLs, names)
+2. Keep structure, tone, length, formatting (HTML/markdown intact)
+3. Generic content stays unchanged
+4. Return each text as [1], [2], etc. on its own line
 
-OLD SCENARIO: {old_scenario[:500]}
-
-NEW SCENARIO: {new_scenario[:500]}"""
+{scenario_info}"""
 
     messages = [
         SystemMessage(content=system_prompt),
@@ -276,17 +458,31 @@ def generate_node(state: WorkflowState) -> Dict[str, Any]:
     if not to_process:
         return {"text_values": text_values, "llm_call_count": llm_call_count}
     
-    # Create batches
-    batches = [to_process[i:i+BATCH_SIZE] for i in range(0, len(to_process), BATCH_SIZE)]
-    logger.info(f"  Processing {len(to_process)} texts in {len(batches)} batches")
+    # Create token-aware batches (large texts are split into sections)
+    batches, split_map = create_token_aware_batches(to_process)
+    section_count = sum(len(v) for v in split_map.values())
+    logger.info(f"  Processing {len(to_process)} texts in {len(batches)} batches ({len(split_map)} texts split into {section_count} sections)")
+    
+    # Get compressed scenario info for prompts
+    old_brands, new_brands = get_compressed_scenario_info(state["old_scenario"], state["new_scenario"])
+    logger.info(f"  Old brands: {old_brands[:80]}...")
+    logger.info(f"  New brands: {new_brands[:80]}...")
     
     llm = ChatOpenAI(model=GENERATION_MODEL, temperature=MODEL_TEMPERATURE, api_key=OPENAI_API_KEY)
     
     async def run_all():
-        return await asyncio.gather(*[
-            rewrite_batch(llm, b, state["old_scenario"], state["new_scenario"], i+1)
-            for i, b in enumerate(batches)
-        ], return_exceptions=True)
+        tasks = []
+        for i, b in enumerate(batches):
+            # Check if this is a section from a split text (needs full context)
+            is_section = len(b) == 1 and "_parent_path" in b[0]
+            is_large = len(b) == 1 and len(b[0]["original"]) > LARGE_TEXT_THRESHOLD
+            tasks.append(rewrite_batch(
+                llm, b, 
+                state["old_scenario"], state["new_scenario"],
+                old_brands, new_brands,
+                i+1, is_large or is_section  # Sections get full scenario context
+            ))
+        return await asyncio.gather(*tasks, return_exceptions=True)
     
     start = time.time()
     loop = asyncio.new_event_loop()
@@ -297,10 +493,25 @@ def generate_node(state: WorkflowState) -> Dict[str, Any]:
     
     # Map results back to text_values
     result_map = {}
+    section_results = {}  # path -> {section_idx: rewritten}
+    
     for batch, batch_results in zip(batches, results):
         if not isinstance(batch_results, Exception):
             for text, rewritten in zip(batch, batch_results):
-                result_map[text["path"]] = rewritten
+                if "_parent_path" in text:
+                    # This is a section result, store for reassembly
+                    parent = text["_parent_path"]
+                    if parent not in section_results:
+                        section_results[parent] = {}
+                    section_results[parent][text["_section_idx"]] = rewritten
+                else:
+                    result_map[text["path"]] = rewritten
+    
+    # Reassemble split texts
+    for path, sections in section_results.items():
+        # Sort by section index and join
+        sorted_sections = [sections[i] for i in sorted(sections.keys())]
+        result_map[path] = "\n".join(sorted_sections)
     
     updated = [{**t, "rewritten": result_map.get(t["path"], t["rewritten"])} for t in text_values]
     
