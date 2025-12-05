@@ -1,0 +1,472 @@
+{
+  "topicWizardData": {
+    "lessonInformation": {
+      "level": "Practice",
+      "lesson": "Acting as a consultant, students will develop a short executive summary recommending how a fast food brand should respond to its competitor's $1 menu. They’ll analyze the competitor’s move, market impact, FreshTaste’s strengths, and four strategic options. Their goal is to propose a clear, realistic, and sustainable plan to protect or grow market share via an executive summary."
+    },
+    "assessmentCriterion": [
+      {
+        "keyLearningOutcome": "Learners will be able to analyze the competitor's $1 menu strategy by examining market trends and consumer behavior to assess its potential impact on FreshTaste's performance.",
+        "criterion": [
+          "Explains the competitor's $1 menu strategy, highlighting its value proposition and target audience.",
+          "Identifies at least two market trends or consumer behaviors relevant to the competitor’s strategy.",
+          "Evaluates the likely effects of the $1 menu on FreshTaste’s market share and revenue."
+        ]
+      },
+      {
+        "keyLearningOutcome": "Learners will be able to evaluate FreshTaste’s competitive position by reviewing its strengths, weaknesses, opportunities, and threats (SWOT) to determine viable strategic responses.",
+        "criterion": [
+          "Summarizes FreshTaste’s key strengths and weaknesses, using at least two examples of relevant internal data.",
+          "Identifies at least one opportunity and one threat posed by market conditions or competitor actions.",
+          "Justifies how the analysis shapes the strategic direction for addressing the competitive challenge."
+        ]
+      },
+      {
+        "keyLearningOutcome": "Learners will be able to recommend a strategic plan by comparing FreshTaste’s four provided strategic options to propose an effective response to the $1 menu.",
+        "criterion": [
+          "Describes the four strategic options and their potential costs, benefits, and risks.",
+          "Selects one option as the recommended response and provides two clear reasons for the choice.",
+          "Creates a concise executive summary that effectively presents the plan and rationale for decision-makers."
+        ]
+      }
+    ],
+    "selectedAssessmentCriterion": [
+      {
+        "keyLearningOutcome": "Learners will be able to recommend a strategic plan by comparing FreshTaste’s four provided strategic options to propose an effective response to the $1 menu.",
+        "criterion": [
+          "Describes the four strategic options and their potential costs, benefits, and risks.",
+          "Selects one option as the recommended response and provides two clear reasons for the choice.",
+          "Creates a concise executive summary that effectively presents the plan and rationale for decision-makers."
+        ]
+      },
+      {
+        "keyLearningOutcome": "Learners will be able to evaluate FreshTaste’s competitive position by reviewing its strengths, weaknesses, opportunities, and threats (SWOT) to determine viable strategic responses.",
+        "criterion": [
+          "Summarizes FreshTaste’s key strengths and weaknesses, using at least two examples of relevant internal data.",
+          "Identifies at least one opportunity and one threat posed by market conditions or competitor actions.",
+          "Justifies how the analysis shapes the strategic direction for addressing the competitive challenge."
+        ]
+      },
+      {
+        "keyLearningOutcome": "Learners will be able to analyze the competitor's $1 menu strategy by examining market trends and consumer behavior to assess its potential impact on FreshTaste's performance.",
+        "criterion": [
+          "Explains the competitor's $1 menu strategy, highlighting its value proposition and target audience.",
+          "Identifies at least two market trends or consumer behaviors relevant to the competitor’s strategy.",
+          "Evaluates the likely effects of the $1 menu on FreshTaste’s market share and revenue."
+        ]
+      }
+    ],
+    "scenarioOptions": [
+      "A strategy team at HarvestBowls is facing a drop in foot traffic after Nature’s Crust introduced a $1 value menu. As a business consultant, learners must analyze the market shake-up, assess possible strategic responses, and recommend a plan that helps HarvestBowls maintain its loyal customer base, safeguard profitability, and uphold its commitment to serving fresh, organic, and wholesome fast food.",
+      "A finance department at FreshTaste is evaluating volatile quarterly revenues after a competitor’s aggressive pricing. As a management consultant, learners must analyze SWOT data and synthesize four potential strategies to identify and justify the most cost-effective path to defend FreshTaste’s position in a shifting market.",
+      "A marketing group at FreshTaste is assessing consumer loyalty erosion caused by FastBurger’s discounted offerings. As an external advisor, learners must interpret consumer trend data, assess four strategic options, and build an evidence-based executive summary to restore competitive advantage and attract value-seeking customers.",
+      "A mid-market fashion retailer, TrendWave, is losing sales after rival ChicStyles launched a 'Buy One Get One Free' promotion on their summer line. As consultants, learners must analyze the threat, weigh strategic responses, and propose how TrendWave can protect its brand equity while regaining foot traffic.",
+      "SkyLink Airlines sees bookings dip sharply after AeroJet slashes fares on popular domestic routes by 30%. As advisors, learners must evaluate how SkyLink can respond—through loyalty program tweaks, bundled offers, or targeted promotions—while preserving margins and brand positioning.",
+      "TechNova faces slowing sales when competitor BrightEdge launches heavy discounts on smartphones during peak holiday season. Learners must recommend how TechNova should respond to protect revenue while maintaining its reputation for innovation.",
+      "BlueHaven Hotels faces occupancy challenges after a competitor chain introduces steep weekend package deals. Students must advise on whether BlueHaven should counter with price-matching, loyalty perks, or service differentiation strategies.",
+      "BurgerZone’s foot traffic declines after rival GrillKing promotes a $2 meal deal. Students must recommend a clear plan that balances competitive pricing with BurgerZone’s positioning around flavor variety and speed of service.",
+      "FreshMart sees reduced traffic after ValueGrocer launches weekly 'half-price family basket' promotions. Learners must weigh whether FreshMart should respond with price cuts, loyalty points, or a focus on fresh and local produce.",
+      "MediCore’s flagship drug sales are at risk after a competitor slashes prices on a generic equivalent. Learners must recommend strategies balancing regulatory compliance, pricing flexibility, and long-term R&D investment.",
+      "FlexFit Gym memberships decline after rival BodyWorks introduces steeply discounted annual packages. Learners must recommend whether FlexFit should compete on price, expand digital offerings, or reinforce its premium brand.",
+      "NimbusCloud faces customer churn as rival SkyWare offers steep introductory discounts for enterprise clients. Learners must recommend whether NimbusCloud should counter with bundled services, retention incentives, or targeted upselling.",
+      "A private university experiences reduced MBA enrollments after a competitor offers significant tuition discounts. Learners must evaluate whether to respond with scholarships, enhanced career services, or program differentiation.",
+      "AutoDrive’s market share shrinks after EcoMotors introduces aggressive promotional leasing rates. Learners must recommend a path balancing brand loyalty, dealer incentives, and long-term profitability.",
+      "SafeBank sees attrition in credit card customers after rival TrustBank offers zero-interest balance transfers. Learners must propose how SafeBank should defend market share through product redesign, rewards innovation, or partnership deals.",
+      "CineWave’s subscriptions plateau after rival StreamMax launches an ad-supported $4.99 plan. Learners must advise whether CineWave should drop prices, expand exclusive content, or enhance user experience to stay competitive.",
+      "HealthHub loses foot traffic when rival MediMart runs '$5 prescriptions' promotions. Learners must recommend a sustainable response strategy balancing price, service quality, and health outcomes.",
+      "A mid-market fashion retailer, TrendWave, is losing sales after rival ChicStyles launched a 'Buy One Get One Free' promotion on their summer line. As consultants, learners must analyze the threat, weigh strategic responses, and propose how TrendWave can protect its brand equity while regaining foot traffic.",
+      "SkyLink Airlines sees bookings dip sharply after AeroJet slashes fares on popular domestic routes by 30%. As advisors, learners must evaluate how SkyLink can respond—through loyalty program tweaks, bundled offers, or targeted promotions—while preserving margins and brand positioning.",
+      "TechNova faces slowing sales when competitor BrightEdge launches heavy discounts on smartphones during peak holiday season. Learners must recommend how TechNova should respond to protect revenue while maintaining its reputation for innovation.",
+      "BlueHaven Hotels faces occupancy challenges after a competitor chain introduces steep weekend package deals. Students must advise on whether BlueHaven should counter with price-matching, loyalty perks, or service differentiation strategies.",
+      "BurgerZone’s foot traffic declines after rival GrillKing promotes a $2 meal deal. Students must recommend a clear plan that balances competitive pricing with BurgerZone’s positioning around flavor variety and speed of service.",
+      "FreshMart sees reduced traffic after ValueGrocer launches weekly 'half-price family basket' promotions. Learners must weigh whether FreshMart should respond with price cuts, loyalty points, or a focus on fresh and local produce.",
+      "MediCore’s flagship drug sales are at risk after a competitor slashes prices on a generic equivalent. Learners must recommend strategies balancing regulatory compliance, pricing flexibility, and long-term R&D investment.",
+      "FlexFit Gym memberships decline after rival BodyWorks introduces steeply discounted annual packages. Learners must recommend whether FlexFit should compete on price, expand digital offerings, or reinforce its premium brand.",
+      "NimbusCloud faces customer churn as rival SkyWare offers steep introductory discounts for enterprise clients. Learners must recommend whether NimbusCloud should counter with bundled services, retention incentives, or targeted upselling.",
+      "A private university experiences reduced MBA enrollments after a competitor offers significant tuition discounts. Learners must evaluate whether to respond with scholarships, enhanced career services, or program differentiation.",
+      "AutoDrive’s market share shrinks after EcoMotors introduces aggressive promotional leasing rates. Learners must recommend a path balancing brand loyalty, dealer incentives, and long-term profitability.",
+      "SafeBank sees attrition in credit card customers after rival TrustBank offers zero-interest balance transfers. Learners must propose how SafeBank should defend market share through product redesign, rewards innovation, or partnership deals.",
+      "CineWave’s subscriptions plateau after rival StreamMax launches an ad-supported $4.99 plan. Learners must advise whether CineWave should drop prices, expand exclusive content, or enhance user experience to stay competitive.",
+      "HealthHub loses foot traffic when rival MediMart runs '$5 prescriptions' promotions. Learners must recommend a sustainable response strategy balancing price, service quality, and health outcomes.",
+      "QuickCab’s ridership dips after competitor GoRide launches a 50%-off first-month campaign. Learners must recommend how QuickCab should counter while ensuring driver retention and maintaining service reliability.",
+      "LearnSphere faces declining enrollments as competitor SkillEdge launches steeply discounted bundle courses. Learners must decide whether to compete on pricing, introduce certifications, or enhance job-placement guarantees.",
+      "SparkleBev sees market erosion after rival PureFizz promotes a '2-for-1' sparkling water deal. Learners must propose a strategy balancing pricing, promotions, and brand identity.",
+      "GlobalTel’s customer churn spikes as rival ConnectPlus rolls out discounted family data packs. Learners must recommend whether to match prices, invest in network quality, or enhance loyalty programs.",
+      "SecureLife struggles to retain customers as rival Protecta offers heavy discounts on bundled insurance premiums. Learners must advise on responses that protect profitability while retaining clients.",
+      "SwiftShip loses contracts after rival MoveMax introduces promotional discounts on small business shipping. Learners must analyze competitive pressures and propose a response that sustains growth while protecting margins."
+    ],
+    "selectedScenarioOption": "A strategy team at HarvestBowls is facing a drop in foot traffic after Nature’s Crust introduced a $1 value menu. As a business consultant, learners must analyze the market shake-up, assess possible strategic responses, and recommend a plan that helps HarvestBowls maintain its loyal customer base, safeguard profitability, and uphold its commitment to serving fresh, organic, and wholesome fast food.",
+    "simulationName": "Strategic Consultant: Responding to the $1 Menu Challenge",
+    "workplaceScenario": {
+      "scenario": "HarvestBowls faces a critical crossroads due to a competitor’s aggressive $1 menu. Learners must synthesize market data and internal strengths to recommend a practical, values-driven strategy for sustained growth.",
+      "simulationType": "Strategy Consulting",
+      "background": {
+        "organizationName": "HarvestBowls",
+        "aboutOrganization": "HarvestBowls, a fast-casual brand known for its fresh, organic, and wholesome menu, has seen steady growth in an increasingly competitive healthy fast food sector. The company’s core clientele values quality ingredients and sustainability. Recently, Nature’s Crust—a direct competitor—has disrupted the market by launching a widely promoted $1 value menu, sparking local buzz and shifting consumer attention with aggressive pricing. HarvestBowls’ leadership is concerned about declining foot traffic and preserving brand integrity while maintaining profitability in the face of this price-driven challenge.",
+        "organizationImageKeyWords": "fast-casual restaurant, fresh organic food, healthy menu, sustainability, branding, strategy"
+      },
+      "challenge": {
+        "currentIssue": "Following the launch of Nature’s Crust’s $1 value menu, HarvestBowls’ flagship locations have experienced a notable decrease in daily customer visits. Early sales data signal an erosion of loyal customer segments, threatening both revenue and brand differentiation. With Nature’s Crust prioritizing affordability, HarvestBowls must quickly assess how to respond strategically without compromising its image or core values. Leadership requires data-driven insight to determine whether to adjust pricing, launch new offerings, intensify marketing, or pursue alternative growth tactics."
+      },
+      "learnerRoleReportingManager": {
+        "learnerRole": {
+          "roleDescription": "You are engaged to advise HarvestBowls’ executive leadership on actionable strategy options in response to Nature’s Crust’s value menu, drawing on market and consumer analytics to deliver clear, impactful recommendations.",
+          "scopeOfWork": [
+            {
+              "task": "Delivering a Strategic Executive Summary for Leadership",
+              "description": "Conduct a thorough analysis for the HarvestBowls executive team, evaluating Nature’s Crust’s $1 menu impact, assessing market and consumer data, and reviewing HarvestBowls’ internal SWOT. Objectively compare four strategic response options—including pricing changes, menu innovation, targeted promotions, and brand reinforcement—and provide a focused executive summary recommending the best path forward to protect customer loyalty and profitability."
+            }
+          ],
+          "role": "Business Consultant"
+        },
+        "reportingManager": {
+          "name": "Mark Caldwell",
+          "email": "",
+          "role": "Chief Strategy Officer",
+          "gender": "male",
+          "message": "With a track record in competitive positioning for mid-sized food chains, Mark oversees corporate strategy at HarvestBowls and expects concise, insight-driven guidance rooted in market realities and the company’s mission.",
+          "avatarUrl": "https://cartedo.s3.us-east-2.amazonaws.com/web/7b5d56a3a81925faa1d1.jpg"
+        }
+      }
+    },
+    "simulationFlow": [
+      {
+        "name": "Introduction",
+        "children": [
+          {
+            "name": "Manager Video Call",
+            "flowProperties": {
+              "purpose": "Learners receive a video call from their reporting manager, Mark Caldwell, Chief Strategy Officer. This sets the stage for the project scope and establishes the preferred channel for project-related communications moving forward."
+            },
+            "data": {
+              "video": {
+                "url": "https://vimeo.com/1010185451",
+                "selectedAvatar": {
+                  "avatarUrl": "https://cartedo.s3.us-east-2.amazonaws.com/web/7b5d56a3a81925faa1d1.jpg",
+                  "avatarName": "Mark Caldwell"
+                }
+              }
+            }
+          },
+          {
+            "name": "Information Email",
+            "flowProperties": {
+              "purpose": "Learners receive an email from their reporting manager, Mark Caldwell, Chief Strategy Officer, providing project details and expectations. This email serves as a formal introduction to the project and outlines the key deliverables and timelines.",
+              "hidden": true
+            },
+            "data": {
+              "email": {
+                "body": "<p>Dear {{{recipientName}}},</p>\n<p>Welcome to the team. I am glad to have you onboard for this critical simulation assignment. Our fast-casual brand, HarvestBowls, prides itself on fresh, organic offerings and strong brand values, but we are currently facing intense competition due to a major local rival, Nature’s Crust, launching a $1 value menu that is reshaping market expectations.</p>\n<p>Your assignment as our business consultant is to develop a concise executive summary that recommends how HarvestBowls should respond strategically to protect and grow our market share. You will need to analyze the competitor’s strategy, evaluate its potential impact using market and internal data, and objectively weigh four strategic options: pricing adjustment, menu innovation, targeted promotions, and brand reinforcement. Our goal is a realistic, sustainable plan that aligns with our brand integrity and customer expectations.</p>\n<p>Please approach this with thorough analysis, making sure to provide clear reasoning for your recommendations. Your executive summary should address our company’s strengths and weaknesses, incorporate relevant data, and deliver actionable insight for our executive leadership. Feel free to let me know if you have questions as you dive in.</p>\n<p>Regards,</p>\n<p><strong>Mark</strong><br><strong>Chief Strategy Officer</strong><br><strong>HarvestBowls</strong>  </p>\n",
+                "subject": "Welcome to the HarvestBowls Strategic Response Simulation Project",
+                "sender": {
+                  "email": "mark.caldwell@harvestbowls.com",
+                  "image": "https://cartedo.s3.us-east-2.amazonaws.com/web/7b5d56a3a81925faa1d1.jpg",
+                  "name": "Mark Caldwell",
+                  "role": "Chief Strategy Officer"
+                }
+              }
+            }
+          },
+          {
+            "name": "Career-Readiness Check",
+            "flowProperties": {
+              "purpose": "Learners complete a career readiness quiz to assess their confidence levels in various career-related skills. This quiz helps learners identify areas for improvement and growth."
+            },
+            "data": {
+              "instructions": "How confident do you feel in your ability to analyze a competitive pricing challenge and recommend a strategic solution for a fast-casual food brand in a real-world workplace situation?"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Delivering a Strategic Executive Summary for Leadership",
+        "flowProperties": {
+          "purpose": "Learners receive a task assignment with detailed instructions based on the scenario. This task is designed to develop a concise executive summary presenting a comparative analysis of four strategic response options to recommend an effective plan to defend or grow HarvestBowls’ market share in response to a competitor’s $1 menu strategy."
+        },
+        "data": {
+          "metadata": {
+            "description": "Learners will assume the role of a business consultant presenting to FreshTaste’s executive team. They will analyze the competitor’s $1 menu strategy, evaluate market and consumer trends, and review FreshTaste’s internal SWOT. Using this analysis, learners will compare four strategic response options and recommend a clear, realistic plan to defend or grow market share. The deliverable is a concise executive summary that synthesizes findings and justifies the chosen strategy for decision-makers. *(KLO 1, KLO 2, KLO 3)*"
+          },
+          "taskEmail": {
+            "body": "<p>Dear {{{recipientName}}},</p>\n<p>I’m reaching out to ask you to take the lead on an important project for our strategy team. As you’ve seen, Nature’s Crust has stirred things up with their new $1 menu, and we’re already seeing the effects on our flagship locations. Leadership is eager for clear, data-driven recommendations on how HarvestBowls should respond—without straying from our brand’s values.</p>\n<p>Your task is to develop a concise executive summary for the executive team. This summary should analyze the $1 menu’s market impact, review our strengths and weaknesses, and compare our four strategic response options. In the end, you’ll need to recommend the option you believe will best protect or grow market share, clearly outlining your reasons and the path forward.</p>\n<p>Don’t forget to rely on the resources we’ve provided—they contain all the data, trends, and internal insights you’ll need. Aim for clear, actionable recommendations tailored to what matters most for HarvestBowls right now.</p>\n<p>Regards,</p>\n<p><strong>Mark</strong><br><strong><a href=\"mailto:mark.caldwell@harvestbowls.com\">mark.caldwell@harvestbowls.com</a></strong><br><strong>Chief Strategy Officer</strong><br><strong>HarvestBowls</strong></p>\n",
+            "subject": "Action Required: Executive Summary Recommendation on Nature’s Crust $1 Menu Response",
+            "purpose": "Learners receive an email from their reporting manager, Mark Caldwell, Chief Strategy Officer, providing project context, expectations, and a formal request for a strategic executive summary deliverable.",
+            "sender": {
+              "email": "mark.caldwell@harvestbowls.com",
+              "image": "https://cartedo.s3.us-east-2.amazonaws.com/web/7b5d56a3a81925faa1d1.jpg",
+              "name": "Mark Caldwell",
+              "role": "Chief Strategy Officer"
+            }
+          },
+          "instructions": "Write a concise executive summary recommending HarvestBowls’ best response to Nature’s Crust’s $1 menu, using provided resource data.",
+          "review": {
+            "rubric": [
+              {
+                "question": "Evaluate the depth and accuracy with which the response analyzes Nature’s Crust’s $1 menu impact on HarvestBowls, referencing specific revenue, traffic, and customer data from the provided resource.",
+                "starRatings": [
+                  {
+                    "description": "Scenario-Specific Impact: Directly references HarvestBowls and Nature’s Crust by name. Quantitative Evidence: Cites key stats (e.g., 14% decline in foot traffic, $38,000 monthly revenue drop, 18% of surveyed regulars trying Nature’s Crust). Detailed Analysis: Explains loss patterns among the 18–34 demographic and includes specifics about competitor promotional reach and sales uplift. Contextual Insight: Links all findings to the overall market shift caused by the $1 menu. No Generalities: Avoids generic statements, focusing only on resource data.",
+                    "rating": 1
+                  },
+                  {
+                    "description": "References both brands, supports points with most relevant data, but may lack full explanation of demographic or sales nuances.",
+                    "rating": 2
+                  },
+                  {
+                    "description": "Cites some statistics or facts but misses key details or links; uses occasional generalities.",
+                    "rating": 3
+                  },
+                  {
+                    "description": "Provides a partially relevant answer, few or no quantitative details; analysis is mostly generic.",
+                    "rating": 4
+                  },
+                  {
+                    "description": "Does not reference brands, stats, or scenario; answer is superficial and generic.",
+                    "rating": 5
+                  }
+                ]
+              },
+              {
+                "question": "Assess how well the recommended strategic response option for HarvestBowls is justified using evidence from the resource, including comparative costs, benefits, risks, and alignment with company values.",
+                "starRatings": [
+                  {
+                    "description": "Strategic Recommendation: Clearly names and justifies one of the four provided options. Comparative Analysis: Weighs costs, benefits, and risks using specific figures (e.g., risk of brand dilution, NPS score, loyalty stats). Value Alignment: Explicitly ties recommendation to HarvestBowls’ mission (freshness, sustainability, premium branding). Detailed Rationale: Provides at least two strong, resource-backed reasons for the choice. Scenario Integration: All rationale is scenario- and resource-specific.",
+                    "rating": 1
+                  },
+                  {
+                    "description": "States strategy, covers most comparative points, and references values, with minor omissions in detail.",
+                    "rating": 2
+                  },
+                  {
+                    "description": "Names a strategy but provides only surface-level or partially resourced justification; limited discussion of values.",
+                    "rating": 3
+                  },
+                  {
+                    "description": "Mentions an option but gives weak, mostly generic reasoning with limited scenario evidence.",
+                    "rating": 4
+                  },
+                  {
+                    "description": "Fails to recommend a viable strategy or uses completely generic, unsupported reasoning.",
+                    "rating": 5
+                  }
+                ]
+              },
+              {
+                "question": "Judge how effectively the response identifies risks associated with the chosen strategy and proposes mitigation actions, using brand, customer, and financial data from the scenario.",
+                "starRatings": [
+                  {
+                    "description": "Identifies primary risks (e.g., brand dilution, revenue cannibalization, loss of core demographic). Mitigation Strategies: Proposes specific, scenario-grounded actions (e.g., leveraging NPS, loyalty programs). Data Integration: Uses resource stats to support both risk identification and mitigation (e.g., customer retention, feedback survey results). Scenario Fit: All risk and mitigation points are specific to HarvestBowls and the Nature’s Crust challenge.",
+                    "rating": 1
+                  },
+                  {
+                    "description": "Identifies risks and mitigation steps, with most referencing resource facts, but some generalization.",
+                    "rating": 2
+                  },
+                  {
+                    "description": "Lists some risks and mitigations but with little detail or weak resource links; some points are generic.",
+                    "rating": 3
+                  },
+                  {
+                    "description": "Risks and mitigations are only vaguely identified, partially relevant to scenario.",
+                    "rating": 4
+                  },
+                  {
+                    "description": "No relevant risks or mitigations identified; response is generic or off-topic.",
+                    "rating": 5
+                  }
+                ]
+              },
+              {
+                "question": "Determine how well the response outlines actionable steps for implementing the chosen strategy and identifies resource-driven KPIs for success measurement.",
+                "starRatings": [
+                  {
+                    "description": "Action Plan: Lists clear, stepwise actions (e.g., targeted promotions, app feature rollouts). Relevant KPIs: Identifies specific measurement points (e.g., foot traffic recovery, app downloads, loyalty program participation, NPS). Resource Integration: KPIs are directly drawn from the provided metrics and scenario (e.g., aiming to recover the 14% lost traffic). Clarity: Steps and measurements are scenario-specific and outcome-focused.",
+                    "rating": 1
+                  },
+                  {
+                    "description": "Provides most action steps and KPIs with good scenario relevance, but may miss a KPI or specific link.",
+                    "rating": 2
+                  },
+                  {
+                    "description": "States basic actions and KPIs but with minimal scenario connection; some generic elements.",
+                    "rating": 3
+                  },
+                  {
+                    "description": "General or incomplete action steps and KPIs, little reference to resource data.",
+                    "rating": 4
+                  },
+                  {
+                    "description": "No clear action plan or KPIs; answer is vague and generic.",
+                    "rating": 5
+                  }
+                ]
+              },
+              {
+                "question": "Evaluate the accuracy and depth of the financial projections presented in the response. How well does the response support projected outcomes using specific cost estimates, gross margin impacts, customer behavior data, and loyalty insights from the project brief?\n",
+                "starRatings": [
+                  {
+                    "description": " Comprehensive Financial Projection: Clearly states projected financial outcomes (e.g., expected gross margin change, revenue recovery timeline, adoption rates).\nScenario-Specific Data Usage: Cites exact figures from the brief (e.g., “-2.5% gross margin during value menu period, $22,000 cost,” “projected 4% lift in loyalty revenue,” “30% visit increase projection among value seekers,” “8-12% Bowl adoption rate among regulars”).\nStrong Justification: Links projections directly to customer data trends (e.g., 60% of revenue from loyalty members, 35% app ordering rates, Gen Z/price-sensitive behavior).\nLogical Consistency: All projections are internally consistent and tied to operational implications mentioned in the project brief.\nZero Generalization: No vague or unsupported financial guesses—every claim is grounded in provided or extrapolated data.\n\n",
+                    "rating": 5
+                  },
+                  {
+                    "description": "Entirely generic or speculative with no relevance to the scenario context.Clear projections using mostly relevant brief data; may miss one key figure (e.g., omits margin impact or cost).\nReferences brief data well but may incompletely explain the linkage between projections and behavioral/data insights.\nMinimal generalization; mostly data-backed logic.\n\n",
+                    "rating": 4
+                  },
+                  {
+                    "description": "States some projections but with moderate clarity or lacks linkage to project-specific data (e.g., missing cost detail or specific loyalty stats).\nUses general financial reasoning common to food-service models but not deeply anchored in simulation data.\nContains some generalization or limited scenario-specific analysis\n",
+                    "rating": 1
+                  },
+                  {
+                    "description": "Basic or vague projections mentioned with little financial clarity.\nLacks citation of specific financial figures from the resource.\nRelies on assumptions not grounded in the provided scenario.\n\n\n",
+                    "rating": 3
+                  },
+                  {
+                    "description": "Fails to offer financial projections or presents unsupported or irrelevant claims.\nNo use of data from simulation brief.\n",
+                    "rating": 2
+                  }
+                ]
+              }
+            ],
+            "helperPrompt": "- Cite Nature’s Crust’s $1 menu details: item types, promo strategy, target audience (price-sensitive millennials, Gen Z, families).\n- Reference specific impact data: 11% drop in visits, 8% revenue dip, 6% decline in loyalty sign-ups, 17% foot traffic increase at Nature’s Crust.\n- Summarize HarvestBowls’ SWOT using resource numbers: brand reputation (#2 local ranking), loyalty program (118,000 members, 60% of transactions), higher price point ($2.80 above average), and operational or value menu gaps.\n- Compare all four strategic options with data: costs, margin effects, customer segments, brand alignment, and operational risks.\n- Clearly recommend ONE option; justify with at least two resource-based reasons (e.g., financial, loyalty, brand fit).\n- Identify and explain key risks of the chosen strategy (e.g., brand dilution, cannibalization), citing scenario data and proposing actionable mitigations.\n- State actionable next steps and identify specific, scenario-driven KPIs for success (e.g., recovering traffic, loyalty metrics).\n- Use only scenario and resource information—no external/general claims.\n- Integrate relevant consumer behavior and trend data (value sensitivity, digital engagement, sustainability importance).\n- Ensure all recommendations and justifications are directly tied to provided facts, figures, and case context."
+          },
+          "resourceOptions": [
+            {
+              "title": "Competitor Analysis Report – Nature’s Crust $1 Menu Launch",
+              "description": "This in-depth competitor analysis provides a detailed breakdown of Nature’s Crust’s new $1 value menu, including its product offerings, positioning, promotional tactics, early customer feedback, and estimated financial impact. The report benchmarks these findings against HarvestBowls’ current strategy and highlights the anticipated market disruption, shifts in consumer loyalty, and price sensitivity trends.",
+              "relevance": "This resource enables learners to accurately analyze the competitor’s strategy, evaluate the $1 menu’s core value proposition, and assess the likely impacts on HarvestBowls’ business, fulfilling KLO 3 requirements."
+            },
+            {
+              "title": "HarvestBowls Internal SWOT Analysis & Performance Dashboard",
+              "description": "This strategic document includes a full SWOT analysis of HarvestBowls, with supporting quantitative data such as recent sales trends, customer retention rates, average basket size, and post-launch foot traffic by location. Visual dashboards highlight key strengths (e.g., brand reputation, ingredient quality), weaknesses (e.g., higher price point, slower throughput), and evolving opportunities and threats in the fast-casual market.",
+              "relevance": "This resource allows learners to critically evaluate HarvestBowls’ internal capabilities and vulnerabilities, tie them to recent market shifts, and justify their recommended strategic direction as required by KLO 2."
+            },
+            {
+              "title": "Executive Briefing: Strategic Response Options for Price-Driven Competition",
+              "description": "This executive briefing outlines four pre-vetted strategic response options for HarvestBowls: (1) Limited-Time Value Menu, (2) Chef-Curated Seasonal Bowls, (3) Loyalty-Driven Promotions, and (4) Brand Reinforcement Campaign. Each option is detailed with estimated costs, projected benefits, potential risks, operational considerations, and alignment with company values and long-term positioning.",
+              "relevance": "Learners use this structured comparison to describe, assess, and select a recommended response, directly supporting KLO 1 and guiding the creation of the executive summary."
+            },
+            {
+              "title": "Market Trends & Consumer Insights Report – Healthy Fast Casual Sector",
+              "description": "This synthesized research report aggregates current industry trends, including consumer demand for value-driven offerings, health-conscious eating patterns, sustainability expectations, and the impact of inflation on dining choices. It also contains survey data on what motivates HarvestBowls’ and Nature’s Crust’s core target audiences.",
+              "relevance": "Learners can extract relevant consumer behavior and market trend data to contextualize both the competitor’s move and HarvestBowls’ options, supporting a well-grounded market impact analysis (KLO 3)."
+            },
+            {
+              "title": "AI-Notetaker Summary – Leadership Strategy Meeting (HarvestBowls Executive Team)",
+              "description": "This AI-generated transcript summarizes a recent strategic meeting among HarvestBowls’ leadership, capturing executive concerns about the $1 menu, priorities for preserving brand equity, risk appetite, and appetite for tactical pivots. It details internal debates around pricing, innovation, and customer engagement strategies.",
+              "relevance": "This resource gives learners nuanced insight into decision-maker priorities and the organizational context, enabling them to tailor their executive summary to leadership expectations and strategic appetite, enhancing the realism and accuracy of their recommendations."
+            }
+          ],
+          "resource": {
+            "title": "Project Briefing: HarvestBowl Competitive Threat Assessment",
+            "markdownText": "<h2>Executive Summary</h2>\n<p>The launch of Nature’s Crust’s $1 value menu presents an urgent challenge for HarvestBowls. This briefing delivers a comparative analysis of four credible strategic response options: (1) Limited-Time Value Menu, (2) Chef-Curated Seasonal Bowls, (3) Loyalty-Driven Promotions, and (4) Brand Reinforcement Campaign. Each approach is evaluated through projected financial impact, benefits, risks, operational implications, and strategic alignment. The briefing enables consultants and executives to make an informed recommendation that safeguards brand equity, retains core loyal customers, and addresses near-term threats to traffic and revenue.</p>\n<hr>\n<h2>Market Context and Competitive Threat Assessment</h2>\n<h3>Nature’s Crust’s $1 Menu: Strategy Overview</h3>\n<p>Nature’s Crust has introduced a $1 value menu targeted at budget-conscious consumers and value seekers, featuring three items (a snack wrap, beverage, and side salad). The value menu is promoted across social channels and in-store, aiming to drive impulse visits and increase cross-selling opportunities. Early indicators suggest their sales mix has shifted, with over 35% of transactions between 11:00 AM and 2:00 PM now linked to the $1 menu since launch. Foot traffic growth at Nature’s Crust flagship stores rose by 17% week-over-week in the first fortnight after introduction.</p>\n<p><em>Value Proposition</em>: The $1 menu aggressively positions Nature’s Crust as the most affordable healthy fast-food option in the neighborhood. Messaging emphasizes accessibility (“Everyone deserves fresh, healthy food—no exceptions”).</p>\n<p><em>Target Audience</em>: The value strategy is attracting price-sensitive millennials, Gen-Z students, and families. A HarvestBowls market study in Q1 2024 shows nearly 48% of local 18-35-year-olds cite price as the <em>single greatest influence</em> on fast-casual dining decisions.</p>\n<h3>Consumer Behavior and Market Trends</h3>\n<ul>\n<li><strong>Value Sensitivity</strong>: NPD Group data (2023) indicate 56% of quick-service visits in the US are motivated by value.</li>\n<li><strong>Health &amp; Sustainability Trends</strong>: 59% of consumers surveyed by the IFIC (2023) prefer healthy menu options, but only 30% are willing to pay a significant premium for organic or sustainable claims.</li>\n<li><strong>Brand Loyalty</strong>: Fresh-casual chains experience high repeat business; 60% of HarvestBowls’ revenue is driven by loyalty program members, according to FY23 internal reporting.</li>\n<li><strong>Digital Engagement</strong>: 40% of orders at city HarvestBowls locations are digitally placed; competitors are responding with app-only promotions.</li>\n</ul>\n<p><strong>Estimated Impact on HarvestBowls:</strong> Since the $1 menu was introduced:</p>\n<ul>\n<li>Flagship location customer visits are down 11% week-over-week.</li>\n<li>Revenue dip of 8% in the first two weeks.</li>\n<li>Loyalty club usage has stayed consistent, but new sign-ups are down 6%.</li>\n</ul>\n<hr>\n<h2>HarvestBowls’ Strengths, Weaknesses, Opportunities, and Threats (SWOT)</h2>\n<h3>Internal Strengths</h3>\n<ul>\n<li><strong>Brand Reputation &amp; Differentiation</strong>: Ranked #2 in local “Best Healthy Eatery” survey, 2023. Strong associations with organic, locally-sourced ingredients.</li>\n<li><strong>Loyalty Program</strong>: 118,000 active members, generating 60% of transactions.</li>\n<li><strong>Sustainability Initiatives</strong>: 80% supply chain verified as sustainable.</li>\n<li><strong>Menu Quality &amp; Variety</strong>: 85% positive menu feedback in latest guest satisfaction survey.</li>\n</ul>\n<h3>Internal Weaknesses</h3>\n<ul>\n<li><strong>Higher Price Perceived</strong>: Average basket is $2.80 higher than fast casual average in the city.</li>\n<li><strong>Operational Complexity</strong>: Seasonal menu shifts have led to service inconsistencies.</li>\n<li><strong>Limited Value Options</strong>: No dedicated value-priced menu; entry-level items start at $5.</li>\n<li><strong>Slower Speed of Service</strong>: Average ticket-to-table time is 90 seconds over category average.</li>\n</ul>\n<h3>Strategic Opportunities</h3>\n<ul>\n<li><strong>Menu Innovation</strong>: Consumers express interest in new seasonal, limited-time offerings (46% “most likely to try” in recent in-app poll).</li>\n<li><strong>Digital Engagement Expansion</strong>: 10% of orders come via app/website, but 35% of city target market uses food delivery apps weekly.</li>\n<li><strong>Partnerships</strong>: Local fitness/wellness alliances can drive awareness and new traffic.</li>\n</ul>\n<h3>External Threats</h3>\n<ul>\n<li><strong>Pricing Pressure</strong>: Competitor’s value menu directly undercuts HarvestBowls on affordability perception.</li>\n<li><strong>Brand Dilution Risks</strong>: Short-term tactics may threaten long-term premium positioning.</li>\n<li><strong>Macroeconomic Conditions</strong>: 2023 inflation has left 42% of surveyed locals “more price-sensitive” for dining choices.</li>\n</ul>\n<p><strong>Strategic Implication</strong>: While the $1 menu challenges HarvestBowls’ traffic and threatens loyalty erosion, the brand’s strong equity, digital presence, and innovation capabilities are key levers for a tailored, sustainable response.</p>\n<hr>\n<h2>Strategic Response Options: Comparative Analysis</h2>\n<h3>OPTION 1: Limited-Time Value Menu</h3>\n<p><strong>Description</strong>: Launch a “HarvestBites” menu with 2-3 items priced at $2-$3, available for 8 weeks during lunch hours.</p>\n<ul>\n<li>\n<p><strong>Estimated Cost</strong>: $22,000 (menu dev, training, ingredient procurement, promotion)</p>\n</li>\n<li>\n<p><strong>Projected Gross Margin Impact</strong>: -2.5% during offer period, recovered in 4 months if 20% of value-menu trialists return to regular menu.</p>\n</li>\n<li>\n<p><strong>Benefits</strong>:</p>\n<ul>\n<li>Key counter to traffic loss; 30% projected visit increase among “value chasers” (Angus Market Study, 2023).</li>\n<li>Addresses strongest competitor threat directly.</li>\n<li>Enables trial by new demographic segments.</li>\n</ul>\n</li>\n<li>\n<p><strong>Risks</strong>:</p>\n<ul>\n<li>Potential long-term price-perception erosion.</li>\n<li>Cannibalization: regular customers may downgrade purchases.</li>\n<li>Operational complexity—training, menu management challenges.</li>\n</ul>\n</li>\n<li>\n<p><strong>Operational Considerations</strong>:</p>\n<ul>\n<li>Must maintain ingredient and sustainability standards.</li>\n<li>Requires clear comms to position as a temporary, high-quality value experience.</li>\n</ul>\n</li>\n<li>\n<p><strong>Brand Alignment</strong>: Moderate; preserves ingredient quality but risks diluting premium reputation if perception of “cheapening” arises.</p>\n</li>\n</ul>\n<h3>OPTION 2: Chef-Curated Seasonal Bowls</h3>\n<p><strong>Description</strong>: Introduce limited-time “Farm-to-Table” signature bowls (priced at $7-8), developed by local chefs and marketed as premium, exclusive experiences.</p>\n<ul>\n<li><strong>Estimated Cost</strong>: $15,000 (chef partnership, R&amp;D, training, digital campaign)</li>\n<li><strong>Projected Gross Margin Impact</strong>: Neutral to +1.2%, based on premium pricing and anticipated 8-12% adoption among regulars.</li>\n<li><strong>Benefits</strong>:\n<ul>\n<li>Strengthens premium market positioning.</li>\n<li>Appeals to loyal customer base and “foodie” segment (who comprise ~28% of app users).</li>\n<li>Drives buzz and differentiation—Instagrammable, newsworthy.</li>\n</ul>\n</li>\n<li><strong>Risks</strong>:\n<ul>\n<li>Doesn’t directly address value-conscious defection; at risk of ignoring lost traffic.</li>\n<li>May appear tone-deaf amid inflation-driven price concerns.</li>\n</ul>\n</li>\n<li><strong>Operational Considerations</strong>:\n<ul>\n<li>Sourcing challenges for seasonal/unique ingredients.</li>\n<li>Need for chef and team training in recipe execution.</li>\n</ul>\n</li>\n<li><strong>Brand Alignment</strong>: Strong; emphasizes brand’s quality, sustainability, and culinary leadership.</li>\n</ul>\n<h3>OPTION 3: Loyalty-Driven Promotions</h3>\n<p><strong>Description</strong>: Implement a “Harvest Rewards Rush” campaign: Double points on app orders, bounce-back coupons for next visit, and “Friends Eat Free on Fridays” referral drive.</p>\n<ul>\n<li><strong>Estimated Cost</strong>: $18,000 (app dev, digital marketing, couponing, staff resources)</li>\n<li><strong>Projected Gross Margin Impact</strong>: -1% short-term; projected 4% lift in loyalty revenue if adoption matches pilot test.</li>\n<li><strong>Benefits</strong>:\n<ul>\n<li>Retains core customer base; harvest loyalty data show 2x higher frequency among program participants.</li>\n<li>Stimulates digital engagement—critical for contemporary foodservice growth.</li>\n<li>Increases CLV (customer lifetime value); reduces churn.</li>\n</ul>\n</li>\n<li><strong>Risks</strong>:\n<ul>\n<li>Requires ongoing budget during period of heavy competitive discounting.</li>\n<li>Will not attract new bargain-seeking customers immediately.</li>\n<li>Perceived as insular if not communicated broadly.</li>\n</ul>\n</li>\n<li><strong>Operational Considerations</strong>:\n<ul>\n<li>Must prevent fraud/abuse of referral and coupon systems.</li>\n<li>Sync with existing digital ordering and POS systems.</li>\n</ul>\n</li>\n<li><strong>Brand Alignment</strong>: Strong; reinforces value-on-experience, not just price.</li>\n</ul>\n<h3>OPTION 4: Brand Reinforcement Campaign</h3>\n<p><strong>Description</strong>: “Roots Matter” storytelling campaign focusing on responsible sourcing, sustainable suppliers, and community impact. Multi-channel: in-store, social media, and local PR.</p>\n<ul>\n<li><strong>Estimated Cost</strong>: $10,000 (agency creative, social/PR, POS materials)</li>\n<li><strong>Projected Gross Margin Impact</strong>: Neutral—aimed at retention versus immediate conversion.</li>\n<li><strong>Benefits</strong>:\n<ul>\n<li>Strengthens brand’s emotional connection with customers; 57% of surveyed regulars say sustainability messages “very important” to them.</li>\n<li>Shields long-term value perception—combat race-to-the-bottom risks.</li>\n<li>Educates on “why HarvestBowls costs more,” ensuring differentiated positioning.</li>\n</ul>\n</li>\n<li><strong>Risks</strong>:\n<ul>\n<li>Lacks immediate transactional incentive; possible drop in price-sensitive visits.</li>\n<li>May seem irrelevant to defected customers focused mainly on price.</li>\n</ul>\n</li>\n<li><strong>Operational Considerations</strong>:\n<ul>\n<li>Needs consistent message execution across staff, social, and physical touchpoints.</li>\n<li>Monitoring sentiment and feedback essential.</li>\n</ul>\n</li>\n<li><strong>Brand Alignment</strong>: Very strong—directly supports mission, long-term positioning.</li>\n</ul>\n<hr>\n<h2>References and Data Sources</h2>\n<ul>\n<li>HarvestBowls FY23 Loyalty Data Report (Internal)</li>\n<li>NPD Group Quick-Service Value Study (2023)</li>\n<li>IFIC Food Trends Survey (2023)</li>\n<li>Local Fast-Casual Brand Survey, Greenfield Insights (2023)</li>\n<li>Angus Market Study: Lunch Value Segments (2023)</li>\n<li>HarvestBowls App Usage Analytics (Q4 2023, Internal)</li>\n</ul>\n<p>&nbsp;</p>"
+          },
+          "settings": {
+            "activityName": "Delivering a Strategic Executive Summary for Leadership"
+          },
+          "activityData": {
+            "questions": [
+              {
+                "question": "How has Nature’s Crust’s $1 menu affected HarvestBowls’ revenue, traffic, and core customer segments?",
+                "title": "Summary: Market Impact Assessment",
+                "instructions": "How has Nature’s Crust’s $1 menu affected HarvestBowls’ revenue, traffic, and core customer segments?"
+              },
+              {
+                "question": "Which response strategy should HarvestBowls pursue, and why is it the most effective choice based on internal capabilities, financial assessment and other factors cited from the project brief?",
+                "title": "Strategic Option: Selection & Rationale",
+                "instructions": "Which response strategy should HarvestBowls pursue, and why is it the most effective choice based on internal capabilities, financial assessment and other factors cited from the project brief?"
+              },
+              {
+                "question": "What are the main risks of this strategy based on the information provided, and how can HarvestBowls mitigate or minimize these risks while maintaining its brand values?",
+                "title": "Selected Option: Risk Assessment & Mitigation",
+                "instructions": "What are the main risks of this strategy based on the information provided, and how can HarvestBowls mitigate or minimize these risks while maintaining its brand values?"
+              },
+              {
+                "question": "What financial outcomes can be projected, and what data provided in the project brief supports these projections?",
+                "title": "Selected Option : Financial Assessment & Results ",
+                "instructions": "What financial outcomes can be projected, and what data provided in the project brief supports these projections?"
+              },
+              {
+                "question": "What specific steps should be taken to implement the chosen strategy, and which KPIs will be monitored to measure success and enable course correction?",
+                "title": "Next Steps, Measurement & KPIs",
+                "instructions": "What specific steps should be taken to implement the chosen strategy, and which KPIs will be monitored to measure success and enable course correction?"
+              }
+            ],
+            "instructions": "Write a concise executive summary recommending HarvestBowls’ best response to Nature’s Crust’s $1 menu, using provided resource data."
+          },
+          "guidelines": {
+            "purpose": "To help learners understand the grading criteria, expectations, and structure needed for a top-scoring executive summary, ensuring clear, resource-driven, and leadership-ready submissions.",
+            "text": "<h1><strong>Grading Guidelines &amp; Scaffolding Tips</strong></h1>\n<p><strong>Activity:</strong> Strategic Executive Summary &ndash; Competitive Response<br><strong>Submission Type:</strong> Executive Summary to Leadership</p>\n<hr>\n<h2>How You Will Be Graded</h2>\n<p><em>(Aligned with the 5-Star Rubric)</em></p>\n<p>Your submission will be evaluated across <strong>four key criteria</strong>, each aligned to strategic decision-making and real-world consulting standards. To achieve a <strong>5-star rating</strong>, your work must demonstrate the following:</p>\n<hr>\n<h3><strong>1. Thorough Competitive Impact Analysis</strong></h3>\n<ul>\n<li>\n<p>✔ Clearly explain the effects of the competitor&rsquo;s new offering, referencing multiple types of data (e.g., % changes, customer shifts, market reactions).</p>\n</li>\n<li>\n<p>✔ Use <strong>resource-based facts and trends</strong> to build your case (not general statements).</p>\n</li>\n<li>\n<p>✔ Connect the competitor&rsquo;s moves to their target audience and projected influence on your company.</p>\n</li>\n</ul>\n<p><strong>💡 5-Star Tip:</strong> Use concrete figures (e.g., &ldquo;XX% decline in customer traffic&rdquo;) and describe how specific groups or business metrics are affected.</p>\n<hr>\n<h3><strong>2. Resource-Driven SWOT and Strategic Fit</strong></h3>\n<ul>\n<li>\n<p>✔ Summarize your organization&rsquo;s relevant strengths and weaknesses with supporting internal data (membership stats, feedback trends, etc.).</p>\n</li>\n<li>\n<p>✔ Identify at least <strong>one opportunity</strong> and <strong>one threat</strong>, clearly tied to market or competitor actions.</p>\n</li>\n<li>\n<p>✔ Relate your analysis directly to your recommended strategy.</p>\n</li>\n</ul>\n<p><strong>💡 5-Star Tip:</strong> Reference internal findings (e.g., &ldquo;surveyed customer satisfaction at XX%&rdquo;) and link these insights directly to your proposed strategy.</p>\n<hr>\n<h3><strong>3. Rigorous Options Comparison and Justification</strong></h3>\n<ul>\n<li>\n<p>✔ Describe all available strategic responses, outlining <strong>pros, cons, estimated costs, and risks</strong> for each.</p>\n</li>\n<li>\n<p>✔ Clearly select <strong>one option</strong> and provide at least <strong>two compelling, evidence-backed reasons</strong> for your choice.</p>\n</li>\n<li>\n<p>✔ Justify your recommendation using <strong>resource-specific data</strong> and <strong>strategic fit</strong>.</p>\n</li>\n</ul>\n<p><strong>💡 5-Star Tip:</strong> Compare each option side-by-side and support your choice with numbers (e.g., &ldquo;Option X projects a gross margin impact of XX%&rdquo;).</p>\n<hr>\n<h3><strong>4. Concise, Executive-Ready Organization and Tone</strong></h3>\n<ul>\n<li>\n<p>✔ Write a summary that is <strong>clear, logical, and structured</strong> for leadership review.</p>\n</li>\n<li>\n<p>✔ Open with the <strong>challenge</strong>, synthesize findings, and conclude with a <strong>decisive recommendation</strong> and rationale.</p>\n</li>\n<li>\n<p>✔ Avoid jargon and generalities&mdash;be <strong>precise</strong> and <strong>resource-focused</strong>.</p>\n</li>\n</ul>\n<p><strong>💡 5-Star Tip:</strong> Limit to essential points, use bullet lists or sections where helpful, and ensure your writing is polished and professional.</p>\n<hr>\n<h2>Additional Tips for a Winning Submission</h2>\n<ul>\n<li>\n<p><strong>Rely only on provided resources:</strong> All arguments, data, and insights must come from the scenario and supplied materials&mdash;<strong>no outside information</strong>.</p>\n</li>\n<li>\n<p><strong>Be strategic, not exhaustive:</strong> Focus on the most critical problems and solutions&mdash;<strong>quality trumps quantity</strong>.</p>\n</li>\n<li>\n<p><strong>Prioritize logically:</strong> Address the highest-impact risks and benefits first, then support with secondary details.</p>\n</li>\n<li>\n<p><strong>Professional clarity:</strong> Leadership wants quick, sharp, actionable analysis&mdash;<strong>make every word count</strong>.</p>\n</li>\n</ul>\n<hr>\n<h2>Checklist for a 5-Star Submission</h2>\n<ul class=\"contains-task-list\">\n<li class=\"task-list-item\">\n<p><input disabled=\"disabled\" type=\"checkbox\"> Did I analyze the competitive impact using <strong>multiple specific data points</strong>?</p>\n</li>\n<li class=\"task-list-item\">\n<p><input disabled=\"disabled\" type=\"checkbox\"> Did I summarize relevant <strong>organizational strengths, weaknesses, opportunities, and threats</strong> with resource evidence?</p>\n</li>\n<li class=\"task-list-item\">\n<p><input disabled=\"disabled\" type=\"checkbox\"> Did I compare all strategic options and <strong>recommend one</strong> with strong, resource-backed reasons?</p>\n</li>\n<li class=\"task-list-item\">\n<p><input disabled=\"disabled\" type=\"checkbox\"> Did I present my findings in a <strong>concise, logical, executive-ready format</strong>?</p>\n</li>\n<li class=\"task-list-item\">\n<p><input disabled=\"disabled\" type=\"checkbox\"> Did I use <strong>only</strong> information from the provided scenario and resources?</p>\n</li>\n</ul>\n<hr>\n<p>By following this scaffold and rubric-aligned guideline, you&rsquo;ll build the <strong>real-world consulting, analysis, and communication skills</strong> leaders value most.</p>\n<p><strong>You&rsquo;ve got this! 🚀</strong></p>\n<p>&nbsp;</p>"
+          },
+          "secondaryTaskEmail": {
+            "body": "<p>Dear {{{recipientName}}},</p>\n<p>Hope you're settling in well! I wanted to pass along a few tips that helped me a ton the last time Mark asked for an executive summary. I know these assignments can be a lot, but breaking it down step by step always makes it way more manageable—and it honestly impresses the leadership team.</p>\n<p>Here’s how I like to approach it: First, start by summarizing the main problem—what exactly is Nature’s Crust’s $1 menu doing to our market, and where’s the pain showing up for us? Second, lay out our internal situation—what strengths do we have to work with, and what are our weak spots? Third, compare the four possible strategies side by side, pointing out what each offers (and doesn’t), and then choose the one you think best fits our brand and business right now. Finally, close with specific next steps or actions, and call out how you’ll measure success (think: KPIs or key results).</p>\n<p>I’m sharing these tips because Mark really values a logical, structured approach—and I’ve seen how much smoother these projects go when we all use the same playbook. Plus, it makes it easy for execs to follow your thinking and see the value in your recommendation, which sets you up for a win. Good luck—you’ve got this!</p>\n<p>Regards,</p>\n<p><strong>Emily Carter</strong><br><strong><a href=\"mailto:emily.carter@harvestbowls.com\">emily.carter@harvestbowls.com</a></strong><br><strong>Strategy Analyst</strong><br><strong>HarvestBowls</strong></p>\n",
+            "subject": "Four Key Steps to Build a Winning Executive Summary for Leadership",
+            "purpose": "Learners receive a peer-to-peer email from Emily Carter, Strategy Analyst, sharing collaborative tips on how to logically structure and prioritize their executive summary for the leadership project.",
+            "sender": {
+              "email": "emily.carter@harvestbowls.com",
+              "image": "https://cartedo.s3.us-east-2.amazonaws.com/avatar/avatarF3.webp",
+              "name": "Emily Carter",
+              "role": "Strategy Analyst"
+            }
+          }
+        }
+      },
+      {
+        "name": "Reflect",
+        "children": [
+          {
+            "name": "Reflection Questions",
+            "flowProperties": {
+              "purpose": "Learners answer reflection questions to help them reflect on the project experience. These questions encourage learners to think critically about their decisions and actions throughout the project."
+            },
+            "data": {
+              "questions": [
+                "What can you now do that you couldn't before this simulation?"
+              ]
+            }
+          },
+          {
+            "name": "Career-Readiness Check",
+            "flowProperties": {
+              "purpose": "Learners complete a post-task career readiness quiz to assess their confidence levels after completing the task. This quiz helps learners reflect on their growth and development throughout the project."
+            },
+            "data": {
+              "instructions": "After completing this simulation, how confident are you in your ability to analyze a competitive pricing challenge and recommend a strategic solution for a fast-casual food brand in a real-world workplace situation?"
+            }
+          }
+        ]
+      }
+    ],
+    "industryAlignedActivities": [
+      {
+        "name": "Delivering a Strategic Executive Summary for Leadership",
+        "description": "Learners will assume the role of a business consultant presenting to FreshTaste’s executive team. They will analyze the competitor’s $1 menu strategy, evaluate market and consumer trends, and review FreshTaste’s internal SWOT. Using this analysis, learners will compare four strategic response options and recommend a clear, realistic plan to defend or grow market share. The deliverable is a concise executive summary that synthesizes findings and justifies the chosen strategy for decision-makers. *(KLO 1, KLO 2, KLO 3)*",
+        "industryAlignment": "Executive summaries distill complex analyses into actionable insights for leaders—a core skill in consulting and management. The task requires structured comparison of strategic options, direct evaluation of competitor moves, and the integration of market and internal data—all aligning with how real-world consultants advise brands facing disruptive competition. The focus on concise, evidence-backed recommendations mirrors contemporary industry expectations for client-facing consultants and strategy professionals.",
+        "relevanceJustification": "This activity directly assesses all three KLOs: Learners must analyze the competitor’s $1 menu and market trends (KLO 3), conduct a SWOT to evaluate FreshTaste’s position (KLO 2), and compare four options to recommend a strategic plan (KLO 1). Evidence of mastery includes their summary of options, SWOT analysis, and a clearly articulated recommendation with supporting rationale, all tailored to an executive audience. The executive summary format ensures synthesis and clear communication—key professional skills.",
+        "rationale": "Executive summaries are the professional standard for communicating strategic recommendations to organizational leadership, demanding synthesis, prioritization, and clarity—exactly matching the activity’s objectives."
+      },
+      {
+        "name": "Conducting a SWOT Analysis to Guide Competitive Strategy",
+        "description": "Learners will act as internal strategy analysts for FreshTaste, tasked with preparing a detailed SWOT analysis in response to the competitor's $1 menu launch. They will identify and summarize at least two internal strengths and weaknesses using provided company data. Additionally, learners will pinpoint at least one opportunity and one threat from the external environment and competitor actions. The activity concludes with a brief reflection on how the SWOT findings inform potential strategic responses. *(KLO 2, KLO 3)*",
+        "industryAlignment": "Performing SWOT analyses is a foundational component of business strategy and organizational design. This activity reflects standard industry practice: synthesizing internal and external data to inform decisions and preparing responses to competitive threats. The expectation of both analysis and brief synthesis aligns with typical analyst deliverables in corporate strategy, consulting, and business development roles.",
+        "relevanceJustification": "This activity addresses KLO 2 by requiring learners to assemble a detailed SWOT utilizing internal data (strengths, weaknesses) and to recognize external opportunities and threats. For KLO 3, learners must analyze a competitor’s move and its market context to define relevant threats and opportunities, demonstrating their understanding of industry dynamics. Mastery is evidenced by correctly categorizing SWOT elements and articulating how the analysis shapes strategic direction.",
+        "rationale": "The swot format structures the required organizational scan and ensures learners cover all four SWOT categories, supporting targeted, actionable analysis."
+      },
+      {
+        "name": "Crafting a Comparative Justification of Strategic Options",
+        "description": "Learners will take the perspective of a strategy team member preparing input for a decision workshop. They will compare FreshTaste's four provided strategic options, articulating the potential costs, benefits, and risks of each. Learners must then select the most effective response and justify their choice with two clear reasons, referencing both market conditions and FreshTaste’s internal position. The output is a structured short answer suitable for pre-meeting circulation. *(KLO 1, KLO 2)*",
+        "industryAlignment": "Preparing structured comparative justifications is a common task for junior strategists and analysts supporting management decision-making. The requirement to weigh costs, benefits, and risks against organizational context reflects standard industry practice in competitive response planning. The short answer format matches the brevity and clarity expected in internal team communications and pre-meeting documentation.",
+        "relevanceJustification": "This activity covers KLO 1 by requiring clear comparison of strategic options and a reasoned recommendation, including rationale. KLO 2 is addressed as learners must explicitly tie their recommendation to FreshTaste’s strengths, weaknesses, or other internal analysis, demonstrating evaluative and integrative thinking. Mastery is evidenced by concise articulation of trade-offs and a grounded recommendation, reflecting real-world decision support.",
+        "rationale": "The short-answer format is ideal for structured, focused comparative analysis and clear, actionable recommendations, paralleling typical internal briefing notes."
+      }
+    ],
+    "selectedIndustryAlignedActivities": [
+      {
+        "name": "Delivering a Strategic Executive Summary for Leadership",
+        "description": "Learners will assume the role of a business consultant presenting to FreshTaste’s executive team. They will analyze the competitor’s $1 menu strategy, evaluate market and consumer trends, and review FreshTaste’s internal SWOT. Using this analysis, learners will compare four strategic response options and recommend a clear, realistic plan to defend or grow market share. The deliverable is a concise executive summary that synthesizes findings and justifies the chosen strategy for decision-makers. *(KLO 1, KLO 2, KLO 3)*",
+        "industryAlignment": "Executive summaries distill complex analyses into actionable insights for leaders—a core skill in consulting and management. The task requires structured comparison of strategic options, direct evaluation of competitor moves, and the integration of market and internal data—all aligning with how real-world consultants advise brands facing disruptive competition. The focus on concise, evidence-backed recommendations mirrors contemporary industry expectations for client-facing consultants and strategy professionals.",
+        "relevanceJustification": "This activity directly assesses all three KLOs: Learners must analyze the competitor’s $1 menu and market trends (KLO 3), conduct a SWOT to evaluate FreshTaste’s position (KLO 2), and compare four options to recommend a strategic plan (KLO 1). Evidence of mastery includes their summary of options, SWOT analysis, and a clearly articulated recommendation with supporting rationale, all tailored to an executive audience. The executive summary format ensures synthesis and clear communication—key professional skills.",
+        "rationale": "Executive summaries are the professional standard for communicating strategic recommendations to organizational leadership, demanding synthesis, prioritization, and clarity—exactly matching the activity’s objectives."
+      }
+    ]
+  }
+}
