@@ -4,43 +4,38 @@ A LangGraph-based agentic workflow that transforms JSON documents to match a new
 
 ## What It Does
 
-Takes an input JSON with multiple scenarios and re-contextualizes **ALL** content to match a newly selected scenario - including company names, brands, emails, URLs, KPIs, and narrative text.
+Takes an input JSON with multiple scenarios and re-contextualizes **ALL** content to match a newly selected scenario - including company names, brands, person names, emails, URLs, KPIs, pricing, and narrative text.
 
 **Guarantees:**
 
 - Output JSON has **identical structure** to input (same keys, nesting, array lengths)
 - `scenarioOptions` field remains **byte-for-byte identical** (the only locked field)
 - **Everything else** is rewritten for the new scenario
-- Emails updated: `mark@harvestbowls.com` → `mark@trendwave.com`
-- Zero residual brand name references from old scenario
+- Brands updated: `HarvestBowls` → `TrendWave`
+- Person names updated: `Mark Caldwell` → `Sarah Chen`
+- Emails updated: `mark@harvestbowls.com` → `sarah@trendwave.com`
+- **Industry-adaptive pricing**: `$2-$3` (food) → `$25-$35` (fashion)
+- Zero residual references from old scenario
 
 ## Performance
 
-| Metric              | Before Optimization | After Optimization |
-| ------------------- | ------------------- | ------------------ |
-| **Total Runtime**   | ~15 seconds         | **10-12 seconds**  |
-| **LLM Calls**       | 26 batches          | 40 batches         |
-| **Max Batch Time**  | 35 seconds          | **~8 seconds**     |
-| **Texts Processed** | 172                 | 172                |
-| **Improvement**     | -                   | **~25% faster**    |
+| Metric              | Value           |
+| ------------------- | --------------- |
+| **Total Runtime**   | **7-8 seconds** |
+| **LLM Calls**       | ~42 calls       |
+| **Texts Processed** | 172             |
+| **Retries**         | 0-1 typically   |
 
-### Optimization Techniques Applied
+### Key Features
 
-| Technique               | Before                | After                           | Impact             |
-| ----------------------- | --------------------- | ------------------------------- | ------------------ |
-| **Batching Strategy**   | Fixed 15 items/batch  | Dynamic ~600 tokens/batch       | Balanced load      |
-| **Large HTML Handling** | Single 35s batch      | Split into 12 parallel sections | 35s → 8s           |
-| **HTML Detection**      | All large texts split | Only HTML content split         | Accuracy preserved |
-
-**Details:**
-
-1. **Token-Aware Batching** - Batches sized by estimated token count (`len(text) * 0.25`), not item count
-
-2. **HTML Content Splitting** - Large HTML (>2000 chars) split at `<h2>`, `<h3>`, `<hr>` boundaries, reassembled after processing
-
-3. **Smart HTML Detection** - Only texts containing HTML tags (`<tag>`) are split; plain text processed as single batch
-
-4. **Full Scenario Context** - All batches receive full scenario text to ensure proper industry/role understanding
+| Feature                       | Description                                                           |
+| ----------------------------- | --------------------------------------------------------------------- |
+| **LLM Entity Extraction**     | Parallel extraction of brands, people, emails from both scenarios     |
+| **Few-Shot Learning**         | Dynamic examples generated from scenario mapping                      |
+| **Industry-Adaptive Pricing** | Automatic scaling of prices to fit target industry                    |
+| **Token-Aware Batching**      | Batches sized by token count (~600 tokens/batch)                      |
+| **HTML Splitting**            | Large HTML split at `<h2>`, `<h3>` boundaries for parallel processing |
+| **Comprehensive Validation**  | Checks brands, person names, email domains, industry consistency      |
 
 ## Usage
 
@@ -79,14 +74,14 @@ output/
     "topicWizardData.lessonInformation.lesson",
     "topicWizardData.workplaceScenario.background.organizationName",
     "topicWizardData.simulationFlow[0].children[1].data.email.body",
-    "... (172 paths total)"
+    "... (91 paths total)"
   ],
   "scenarioConsistency": "OK",
   "failedPaths": [],
   "runtimeStats": {
-    "latency_ms": 10500, // Before: 15308ms → After: ~10500ms
+    "latency_ms": 7616,
     "numRetries": 0,
-    "numLLMCalls": 40 // Before: 26 → After: 40 (smaller, faster batches)
+    "numLLMCalls": 42
   }
 }
 ```
@@ -95,72 +90,75 @@ output/
 
 ## Architecture
 
-### The Simple Approach
+### High-Level Flow
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│  1. EXTRACT                                                          │
-│     • Pull ALL strings from JSON (no filtering)                      │
+│  1. PARSE & EXTRACT                                                  │
+│     • Pull ALL strings from JSON (172 text values)                   │
 │     • Only skip: scenarioOptions (locked field)                      │
-│     • Result: 172 text values with their JSON paths                  │
+│     • LLM Entity Extraction (parallel):                              │
+│       - OLD: company=HarvestBowls, competitor=Nature's Crust         │
+│       - NEW: company=TrendWave, competitor=ChicStyles                │
+│       - Person names, email domains, promotions                      │
 └──────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│  2. SEND TO LLM (Optimized)                                          │
-│     • "Here's OLD scenario, here's NEW scenario"                     │
-│     • "Rewrite these texts - change brands, emails, metrics, etc."   │
-│     • LLM decides what needs changing based on context               │
-│                                                                      │
-│     BEFORE: 26 batches × 15 items = 35s (large HTML blocked others)  │
-│     AFTER:  40 batches × ~600 tokens = 7-8s (HTML split + parallel)  │
+│  2. GENERATE (LLM Rewrite)                                           │
+│     • Few-shot examples from entity mapping                          │
+│     • Industry-adaptive pricing rules                                │
+│     • 40 parallel batches × ~600 tokens = 5-6s                       │
+│     • Large HTML split into sections, reassembled after              │
 └──────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│  3. INJECT BACK                                                      │
+│  3. ASSEMBLE                                                         │
 │     • Deep copy original JSON structure                              │
-│     • Replace each text at its original path                         │
+│     • Inject rewritten texts at original paths                       │
+│     • Reassemble split HTML sections                                 │
 │     • Restore locked scenarioOptions                                 │
 └──────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│  4. VALIDATE                                                         │
+│  4. VALIDATE (LLM-Extracted Entities)                                │
 │     • Schema match? (same structure)                                 │
 │     • Locked fields intact? (scenarioOptions unchanged)              │
-│     • Brand leakage? (old brand names shouldn't appear)              │
-│     • If leakage found → retry those specific texts                  │
+│     • No old entities? (brands, people, emails, promotions)          │
+│     • If leakage found → targeted repair (max 3 retries)             │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### LangGraph Workflow
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  Parse/Extract  │────▶│    Generate     │────▶│    Assemble     │
-│                 │     │  (parallel LLM) │     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                                        │
-                        ┌─────────────────┐             │
-                        │     Repair      │◀────────────┤ (if validation fails)
-                        │  (retry loop)   │             │
-                        └─────────────────┘             ▼
-                                │               ┌─────────────────┐
-                                └──────────────▶│    Validate     │────▶ END
-                                                │                 │
-                                                └─────────────────┘
+┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────┐
+│   Parse & Extract   │────▶│      Generate       │────▶│    Assemble     │
+│  + LLM Entity Ext.  │     │  (parallel batches) │     │                 │
+│    (parallel)       │     │  + Few-Shot Learn   │     │                 │
+└─────────────────────┘     └─────────────────────┘     └─────────────────┘
+                                                                │
+                            ┌─────────────────┐                 │
+                            │     Repair      │◀────────────────┤ (if validation fails)
+                            │  (retry failed) │                 │
+                            └─────────────────┘                 ▼
+                                    │                   ┌─────────────────┐
+                                    └──────────────────▶│    Validate     │────▶ END
+                                                        │ (LLM entities)  │
+                                                        └─────────────────┘
 ```
 
 ### 5-Node Pipeline
 
-| Node         | What It Does                                             | Before → After                      |
-| ------------ | -------------------------------------------------------- | ----------------------------------- |
-| **Parse**    | Extract ALL strings from JSON, save `scenarioOptions`    | No change                           |
-| **Generate** | Send texts to LLM in parallel batches                    | 26 batches → 40 token-aware batches |
-| **Assemble** | Put rewritten texts back into original JSON structure    | Now reassembles split HTML sections |
-| **Validate** | Check schema, locked fields, and brand name leakage      | No change                           |
-| **Repair**   | If validation fails, retry only the failed texts (max 3) | No change                           |
+| Node         | What It Does                                                         |
+| ------------ | -------------------------------------------------------------------- |
+| **Parse**    | Extract ALL strings, LLM entity extraction (parallel for old/new)    |
+| **Generate** | Rewrite with few-shot examples + industry-adaptive pricing           |
+| **Assemble** | Inject texts back, reassemble HTML sections, restore locked fields   |
+| **Validate** | Check schema, locked fields, entity leakage (brands, people, emails) |
+| **Repair**   | Retry only failed texts with specific feedback (max 3 retries)       |
 
 ### Project Structure
 
@@ -169,7 +167,7 @@ context/
 ├── src/
 │   ├── __init__.py      # Package marker
 │   ├── config.py        # Model name, API settings, batching constants
-│   ├── workflow.py      # LangGraph nodes + graph definition (~670 lines)
+│   ├── workflow.py      # LangGraph nodes + graph definition (~1000 lines)
 │   └── main.py          # CLI entry point
 ├── output/              # Generated outputs
 ├── requirements.txt
@@ -180,15 +178,76 @@ context/
 
 ## Key Design Decisions
 
-### 1. Send EVERYTHING to the LLM
+### 1. LLM-Based Entity Extraction
 
-**No filtering.** We don't skip URLs, emails, or any content. The LLM decides what's scenario-dependent:
+Instead of brittle regex patterns, we use LLM to semantically extract entities from scenarios:
 
-- `mark@harvestbowls.com` → `mark@trendwave.com` ✓
-- `https://example.com` → stays the same (generic)
-- `Practice` → stays the same (not scenario-specific)
+```python
+# LLM extracts these entities (run in parallel for old & new scenarios):
+{
+  "primary_company": "HarvestBowls",      # → "TrendWave"
+  "competitor": "Nature's Crust",          # → "ChicStyles"
+  "promotion_type": "$1 value menu",       # → "Buy One Get One Free"
+  "person_names": ["Mark Caldwell", "Emily Carter"],
+  "email_domains": ["harvestbowls.com"]
+}
+```
 
-### 2. Only Lock `scenarioOptions`
+**Benefits:**
+
+- Handles apostrophes: `Nature's Crust` ✓
+- Finds names not in scenario text (from JSON context)
+- Infers email domains from company names
+- No regex maintenance required
+
+### 2. Few-Shot Learning
+
+Dynamic examples generated from entity mapping teach the LLM the transformation pattern:
+
+```
+TRANSFORMATION EXAMPLES:
+─────────────────────────
+Brand: "HarvestBowls" → "TrendWave"
+Competitor: "Nature's Crust" → "ChicStyles"
+Person: "Mark Caldwell" → [Generate new name like "Sarah Chen"]
+Email: "mark@harvestbowls.com" → "sarah@trendwave.com"
+Promotion: "$1 value menu" → "Buy One Get One Free promotion"
+Industry: "fast food" → "fashion retail"
+```
+
+### 3. Industry-Adaptive Pricing
+
+The LLM prompt includes rules to scale prices appropriately:
+
+```
+PRICING RULES:
+• Food → Fashion: $2-$3 items → $25-$35 items
+• Fashion → Food: $50-$70 items → $5-$7 items
+• Scale ALL dollar amounts proportionally
+• Keep percentages and relative comparisons the same
+```
+
+**Example Transformation:**
+
+```
+BEFORE (Food): "Launch a HarvestBites menu with items at $2-$3"
+AFTER (Fashion): "Launch a TrendWave collection with items at $25-$35"
+```
+
+### 4. Comprehensive Validation
+
+Validation now checks for ALL old scenario markers using LLM-extracted entities:
+
+| Check                | What It Verifies                          |
+| -------------------- | ----------------------------------------- |
+| Schema Match         | Same keys, nesting, array lengths         |
+| Locked Fields        | `scenarioOptions` byte-for-byte identical |
+| Brand Leakage        | No old company/competitor names           |
+| Person Name Leakage  | No old person names (LLM-extracted)       |
+| Email Domain Leakage | No old email domains                      |
+| Promotion Leakage    | No old promotion references               |
+
+### 5. Only Lock `scenarioOptions`
 
 Per requirements, only ONE field is locked:
 
@@ -197,70 +256,58 @@ scenarioOptions → MUST be byte-for-byte identical
 Everything else → CAN change to match new scenario
 ```
 
-### 3. Validate Brand Names Only
+### 6. Token-Aware Parallel Batching
 
-Leakage detection checks for **brand names**, not generic words:
+| Parameter             | Value                              |
+| --------------------- | ---------------------------------- |
+| **Batch Size**        | Dynamic ~600 tokens per batch      |
+| **Large Text (HTML)** | Split at `<h2>`, `<h3>` boundaries |
+| **Parallelism**       | All batches run concurrently       |
+| **Total Batches**     | ~40 batches                        |
+| **Max Batch Time**    | ~5 seconds                         |
 
-```python
-# Find brand patterns in old scenario
-old_brands = ["HarvestBowls", "Nature's Crust"]  # CamelCase + possessives
-
-# Check if any appear in output (except locked fields)
-for brand in old_brands:
-    if brand.lower() in output_text.lower():
-        # LEAKAGE! Retry this text.
-```
-
-We DON'T flag generic words like "food", "menu", "team" even if they appear in old scenario.
-
-### 4. Token-Aware Parallel Batching
-
-| Parameter             | Before (Fixed)                  | After (Optimized)                         |
-| --------------------- | ------------------------------- | ----------------------------------------- |
-| **Batch Size**        | Fixed 15 items per batch        | Dynamic ~600 tokens per batch             |
-| **Large Text (HTML)** | Single batch (35s per file)     | Split into sections, parallel (<8s total) |
-| **Prompt Content**    | Full scenario text (~500 chars) | Full scenario (required for accuracy)     |
-| **Total Batches**     | 26 batches                      | 40 batches                                |
-| **Max Batch Time**    | 35 seconds                      | ~8 seconds                                |
-| **Total LLM Time**    | ~15 seconds                     | ~8-10 seconds                             |
-
-**Key Changes:**
-
-- Batches sized by token count, not item count
-- Large HTML (>2000 chars) split at `<h2>`, `<h3>`, `<hr>` boundaries
-- All batches run in parallel (asyncio)
-- Sections reassembled after processing
-
-### 5. Targeted Repair
+### 7. Targeted Repair
 
 If validation finds leakage:
 
 1. Identify which specific texts failed
 2. Reset only those texts
-3. Re-generate only those texts
+3. Re-generate with specific feedback
 4. Loop back to validation
 
 Max 3 retries, then output with warning.
 
 ---
 
-## Validation Checks
+## Transformation Example
 
-| Check         | What It Verifies                  | Method                    |
-| ------------- | --------------------------------- | ------------------------- |
-| Schema Match  | Same keys, nesting, array lengths | Recursive comparison      |
-| Locked Fields | `scenarioOptions` unchanged       | Deep equality             |
-| Brand Leakage | No old brand names in output      | Pattern matching + search |
+**Input Scenario (Food Industry):**
 
-### Brand Detection (the only regex used)
-
-```python
-# CamelCase brands: HarvestBowls, TrendWave
-re.findall(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b', scenario)
-
-# Possessive brands: Nature's Crust
-re.findall(r"[A-Z][a-z]+'s(?:\s+[A-Z][a-z]+)?", scenario)
 ```
+A strategy team at HarvestBowls is facing a drop in foot traffic after
+Nature's Crust introduced a $1 value menu. As a business consultant,
+learners must analyze the market shake-up...
+```
+
+**Output Scenario (Fashion Industry):**
+
+```
+A mid-market fashion retailer, TrendWave, is losing customers to
+ChicStyles' aggressive Buy One Get One Free promotion. As a business
+consultant, learners must analyze the market shake-up...
+```
+
+**What Changes:**
+
+| Element        | Before                   | After                   |
+| -------------- | ------------------------ | ----------------------- |
+| Company        | HarvestBowls             | TrendWave               |
+| Competitor     | Nature's Crust           | ChicStyles              |
+| Promotion      | $1 value menu            | Buy One Get One Free    |
+| Manager        | Mark Caldwell            | Sarah Chen              |
+| Email          | mark@harvestbowls.com    | sarah@trendwave.com     |
+| Pricing        | $2-$3 items              | $25-$35 items           |
+| Industry Terms | fast food, menu, organic | fashion retail, apparel |
 
 ---
 
@@ -274,10 +321,41 @@ re.findall(r"[A-Z][a-z]+'s(?:\s+[A-Z][a-z]+)?", scenario)
 
 Per re-contextualization run (~172 text values):
 
-| Component     | Calculation     | Cost            |
-| ------------- | --------------- | --------------- |
-| Input tokens  | ~18K × $0.10/1M | $0.0018         |
-| Output tokens | ~12K × $0.40/1M | $0.0048         |
-| **Total**     |                 | **~$0.007/run** |
+| Component              | Calculation     | Cost            |
+| ---------------------- | --------------- | --------------- |
+| Entity extraction      | ~2K × $0.10/1M  | $0.0002         |
+| Input tokens (rewrite) | ~18K × $0.10/1M | $0.0018         |
+| Output tokens          | ~12K × $0.40/1M | $0.0048         |
+| **Total**              |                 | **~$0.007/run** |
 
 At scale: ~$7 per 1,000 documents processed.
+
+---
+
+## Verification Checklist
+
+Run this to verify all requirements are met:
+
+```bash
+python -c "
+import json
+with open('output/output.json') as f: output = json.load(f)
+with open('output/validation_report.json') as f: report = json.load(f)
+
+print('1. Schema Match:', '✅' if report['schemaMatch'] else '❌')
+print('2. Locked Fields:', '✅' if report['lockedFieldsUntouched'] else '❌')
+print('3. Consistency:', '✅' if report['scenarioConsistency'] == 'OK' else '❌')
+print('4. Runtime:', f\"{report['runtimeStats']['latency_ms']}ms\")
+print('5. Changed Fields:', len(report['changedFieldPaths']))
+"
+```
+
+Expected output:
+
+```
+1. Schema Match: ✅
+2. Locked Fields: ✅
+3. Consistency: ✅
+4. Runtime: ~7600ms
+5. Changed Fields: 91
+```

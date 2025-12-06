@@ -41,11 +41,24 @@ class ValidationResult(TypedDict):
     runtimeStats: Dict[str, Any]
 
 
+class ScenarioEntities(TypedDict):
+    """Entities extracted from a scenario by LLM."""
+    primary_company: str
+    competitor: str
+    promotion_type: str
+    industry: str
+    person_names: List[str]
+    email_domains: List[str]
+    key_terms: List[str]
+
+
 class WorkflowState(TypedDict):
     input_json: Dict[str, Any]
     selected_scenario: Union[str, int]
     old_scenario: str
     new_scenario: str
+    old_entities: Optional[ScenarioEntities]  # LLM-extracted from old scenario
+    new_entities: Optional[ScenarioEntities]  # LLM-extracted from new scenario
     locked_fields: Dict[str, Any]
     text_values: List[TextValue]
     output_json: Optional[Dict[str, Any]]
@@ -105,6 +118,115 @@ def set_nested_value(obj: Any, path: str, value: Any) -> None:
     current_obj[parts[-1]] = value
 
 
+# =============================================================================
+# LLM-BASED ENTITY EXTRACTION 
+# =============================================================================
+
+async def extract_entities_with_llm(scenario: str, json_sample: str = "") -> ScenarioEntities:
+    """Use LLM to extract ALL scenario-dependent entities.
+    
+    Much more robust than regex - understands context and semantics.
+    """
+    llm = ChatOpenAI(model=GENERATION_MODEL, temperature=0, api_key=OPENAI_API_KEY)
+    
+    prompt = f"""Analyze this business scenario and extract ALL scenario-specific entities.
+
+SCENARIO:
+{scenario}
+
+{f"ADDITIONAL CONTEXT (sample from JSON):{chr(10)}{json_sample[:500]}" if json_sample else ""}
+
+Extract and return as JSON:
+{{
+    "primary_company": "The main company facing the challenge (e.g., HarvestBowls, TrendWave)",
+    "competitor": "The competing company (e.g., Nature's Crust, ChicStyles)",
+    "promotion_type": "The specific promotion/challenge (e.g., $1 menu, Buy One Get One Free)",
+    "industry": "The industry sector (e.g., fast-casual food, fashion retail, airlines)",
+    "person_names": ["Any person names mentioned or implied"],
+    "email_domains": ["Likely email domains based on company names, e.g., harvestbowls.com"],
+    "key_terms": ["Industry-specific terms that would need to change, e.g., menu, eatery, collection, apparel"]
+}}
+
+Return ONLY valid JSON, no explanation."""
+
+    response = await llm.ainvoke([HumanMessage(content=prompt)])
+    
+    try:
+        # Parse the JSON response
+        content = response.content.strip()
+        # Handle markdown code blocks if present
+        if content.startswith("```"):
+            content = content.split("```")[1]
+            if content.startswith("json"):
+                content = content[4:]
+        entities = json.loads(content)
+        
+        return ScenarioEntities(
+            primary_company=entities.get("primary_company", ""),
+            competitor=entities.get("competitor", ""),
+            promotion_type=entities.get("promotion_type", ""),
+            industry=entities.get("industry", ""),
+            person_names=entities.get("person_names", []),
+            email_domains=entities.get("email_domains", []),
+            key_terms=entities.get("key_terms", [])
+        )
+    except json.JSONDecodeError:
+        logger.warning("Failed to parse LLM entity extraction response, falling back to empty")
+        return ScenarioEntities(
+            primary_company="",
+            competitor="",
+            promotion_type="",
+            industry="",
+            person_names=[],
+            email_domains=[],
+            key_terms=[]
+        )
+
+
+def get_old_markers_from_entities(old_entities: ScenarioEntities, new_entities: ScenarioEntities) -> List[str]:
+    """Get markers from LLM-extracted entities that should NOT appear in output.
+    
+    Compares old vs new entities to find what should be replaced.
+    """
+    markers = []
+    
+    # Primary company (if different)
+    if old_entities["primary_company"] and old_entities["primary_company"].lower() != new_entities["primary_company"].lower():
+        markers.append(old_entities["primary_company"].lower())
+        # Also add without spaces for CamelCase detection
+        markers.append(old_entities["primary_company"].lower().replace(" ", ""))
+    
+    # Competitor
+    if old_entities["competitor"] and old_entities["competitor"].lower() != new_entities["competitor"].lower():
+        markers.append(old_entities["competitor"].lower())
+        # Handle possessives like "Nature's"
+        if "'" in old_entities["competitor"]:
+            markers.append(old_entities["competitor"].split("'")[0].lower())
+    
+    # Promotion type
+    if old_entities["promotion_type"] and old_entities["promotion_type"].lower() != new_entities["promotion_type"].lower():
+        markers.append(old_entities["promotion_type"].lower())
+    
+    # Person names
+    for name in old_entities["person_names"]:
+        if name and name not in new_entities["person_names"]:
+            markers.append(name.lower())
+    
+    # Email domains
+    for domain in old_entities["email_domains"]:
+        if domain and domain not in new_entities["email_domains"]:
+            markers.append(domain.lower())
+    
+    # Filter out very short markers and duplicates
+    markers = list(set(m for m in markers if len(m) > 2))
+    
+    return markers
+
+
+# =============================================================================
+# REGEX-BASED ENTITY EXTRACTION (Fallback)
+# =============================================================================
+
 def extract_scenario_brands(scenario: str) -> List[str]:
     """Extract brand/company names from a scenario.
     
@@ -124,30 +246,176 @@ def extract_scenario_brands(scenario: str) -> List[str]:
     return [b for b in brands if len(b) > 3]
 
 
-def get_old_brand_names(old_scenario: str, new_scenario: str) -> List[str]:
-    """Extract brand/company names from OLD scenario that shouldn't appear in output.
+def extract_scenario_elements(scenario: str) -> Dict[str, List[str]]:
+    """Extract ALL scenario-dependent elements for comprehensive validation.
     
-    Only looks for brand-like patterns, not generic words.
+    Returns dict with: brands, promotions, industry_terms, key_phrases
     """
-    old_brands = set(extract_scenario_brands(old_scenario))
-    new_brands = set(extract_scenario_brands(new_scenario))
+    elements = {
+        "brands": [],
+        "promotions": [],
+        "industry_terms": [],
+        "key_phrases": []
+    }
     
-    # Return lowercase versions for case-insensitive matching
-    return [b.lower() for b in (old_brands - new_brands) if len(b) > 3]
+    # 1. Brands (CamelCase, Possessives)
+    elements["brands"].extend(re.findall(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b', scenario))
+    elements["brands"].extend(re.findall(r"[A-Z][a-z]+'s(?:\s+[A-Z][a-z]+)?", scenario))
+    
+    # 2. Promotions (price-based patterns)
+    elements["promotions"].extend(re.findall(r'\$\d+(?:\.\d+)?\s*(?:menu|meal|deal|value)', scenario, re.IGNORECASE))
+    elements["promotions"].extend(re.findall(r'Buy One Get One Free', scenario, re.IGNORECASE))
+    elements["promotions"].extend(re.findall(r'BOGO', scenario, re.IGNORECASE))
+    elements["promotions"].extend(re.findall(r'\d+%[- ]off', scenario, re.IGNORECASE))
+    
+    # 3. Industry terms
+    if any(term in scenario.lower() for term in ['food', 'restaurant', 'menu', 'fast-casual', 'eatery']):
+        elements["industry_terms"].extend(['fast-casual', 'restaurant', 'menu', 'eatery', 'food brand'])
+    if any(term in scenario.lower() for term in ['fashion', 'retail', 'apparel', 'clothing']):
+        elements["industry_terms"].extend(['fashion', 'retailer', 'apparel', 'clothing', 'collection'])
+    
+    # 4. Key phrases (3+ word sequences with proper nouns)
+    # Extract significant phrases containing brand names
+    for brand in elements["brands"]:
+        # Find phrases containing this brand
+        pattern = rf'\b{re.escape(brand)}(?:\'s)?\s+\w+(?:\s+\w+)?'
+        elements["key_phrases"].extend(re.findall(pattern, scenario))
+    
+    # Clean up - remove duplicates, filter short items
+    for key in elements:
+        elements[key] = list(set(e for e in elements[key] if len(str(e)) > 2))
+    
+    return elements
 
 
-def get_compressed_scenario_info(old_scenario: str, new_scenario: str) -> tuple[str, str]:
-    """Extract compressed brand info for prompts instead of full scenarios.
+def get_old_scenario_markers(old_scenario: str, new_scenario: str) -> List[str]:
+    """Get ALL markers from old scenario that should NOT appear in output.
     
-    Returns (old_brands_str, new_brands_str) for use in prompts.
+    More comprehensive than just brand names - includes promotions, phrases, etc.
     """
-    old_brands = extract_scenario_brands(old_scenario)
-    new_brands = extract_scenario_brands(new_scenario)
+    old_elements = extract_scenario_elements(old_scenario)
+    new_elements = extract_scenario_elements(new_scenario)
     
-    old_str = ", ".join(old_brands) if old_brands else old_scenario[:100]
-    new_str = ", ".join(new_brands) if new_brands else new_scenario[:100]
+    markers = []
     
-    return old_str, new_str
+    # Add brands unique to old scenario
+    old_brands = set(b.lower() for b in old_elements["brands"])
+    new_brands = set(b.lower() for b in new_elements["brands"])
+    markers.extend(old_brands - new_brands)
+    
+    # Add promotions unique to old scenario  
+    old_promos = set(p.lower() for p in old_elements["promotions"])
+    new_promos = set(p.lower() for p in new_elements["promotions"])
+    markers.extend(old_promos - new_promos)
+    
+    # Add key phrases
+    markers.extend(p.lower() for p in old_elements["key_phrases"])
+    
+    return [m for m in markers if len(m) > 3]
+
+
+def build_few_shot_examples(old_scenario: str, new_scenario: str) -> str:
+    """Build few-shot transformation examples from the two scenarios.
+    
+    The model learns the mapping pattern from these examples.
+    """
+    old_elements = extract_scenario_elements(old_scenario)
+    new_elements = extract_scenario_elements(new_scenario)
+    
+    examples = []
+    
+    # Brand mapping examples
+    old_brands = old_elements["brands"][:2]  # Take first 2 brands
+    new_brands = new_elements["brands"][:2]
+    
+    if old_brands and new_brands:
+        # Primary company example
+        examples.append(f'''Example 1 - Primary Company:
+  BEFORE: "How should {old_brands[0]} respond to the competitive threat?"
+  AFTER:  "How should {new_brands[0]} respond to the competitive threat?"''')
+        
+        # If we have competitors
+        if len(old_brands) > 1 and len(new_brands) > 1:
+            examples.append(f'''Example 2 - Competitor:
+  BEFORE: "Analyze {old_brands[1]}'s strategy and its impact"
+  AFTER:  "Analyze {new_brands[1]}'s strategy and its impact"''')
+    
+    # Promotion mapping example
+    old_promos = old_elements["promotions"]
+    new_promos = new_elements["promotions"]
+    if old_promos and new_promos:
+        examples.append(f'''Example 3 - Promotion/Challenge:
+  BEFORE: "responding to the {old_promos[0]}"
+  AFTER:  "responding to the {new_promos[0]}"''')
+    
+    # Email domain example
+    if old_brands and new_brands:
+        old_domain = old_brands[0].lower().replace("'s", "").replace(" ", "")
+        new_domain = new_brands[0].lower().replace("'s", "").replace(" ", "")
+        examples.append(f'''Example 4 - Email Domain:
+  BEFORE: "contact@{old_domain}.com"
+  AFTER:  "contact@{new_domain}.com"''')
+    
+    # Full sentence example
+    if old_brands and new_brands:
+        examples.append(f'''Example 5 - Full Sentence:
+  BEFORE: "{old_brands[0]} must develop a strategic response to maintain market share"
+  AFTER:  "{new_brands[0]} must develop a strategic response to maintain market share"''')
+    
+    # Person name example - IMPORTANT: Person names should also change for new context
+    examples.append('''Example 6 - Person Names (Generate new appropriate names for the new scenario):
+  BEFORE: "Mark Caldwell, Chief Strategy Officer"
+  AFTER:  "Sarah Chen, Chief Strategy Officer" (or another appropriate name)
+  
+  BEFORE: "emily.carter@oldcompany.com"
+  AFTER:  "emily.chen@newcompany.com"''')
+    
+    return "\n\n".join(examples) if examples else ""
+
+
+def extract_json_person_names(input_json: Dict[str, Any]) -> List[str]:
+    """Extract ACTUAL person names from the input JSON structure.
+    
+    Only looks for names in specific person-related fields like:
+    - reportingManager.name
+    - sender.name (in email contexts)
+    - avatarName
+    
+    Avoids generic section/activity names.
+    """
+    names = set()
+    
+    def find_names(obj: Any, path: str = ""):
+        if isinstance(obj, dict):
+            # Only extract names from specific person-related contexts
+            is_person_context = any(ctx in path.lower() for ctx in [
+                "reportingmanager", "sender", "avatar", "manager"
+            ])
+            
+            if is_person_context and "name" in obj and isinstance(obj["name"], str):
+                name = obj["name"]
+                # Person names typically have 2-3 words, first letter caps
+                words = name.split()
+                if 2 <= len(words) <= 4:
+                    # Looks like a person name (First Last or First Middle Last)
+                    if all(w[0].isupper() and w[1:].islower() for w in words if len(w) > 1):
+                        names.add(name)
+            
+            # Also check for avatarName specifically
+            if "avatarName" in obj and isinstance(obj["avatarName"], str):
+                name = obj["avatarName"]
+                words = name.split()
+                if 2 <= len(words) <= 4:
+                    names.add(name)
+            
+            for key, value in obj.items():
+                find_names(value, f"{path}.{key}")
+        elif isinstance(obj, list):
+            for i, item in enumerate(obj):
+                find_names(item, f"{path}[{i}]")
+    
+    find_names(input_json)
+    return list(names)
 
 
 def compare_structure(obj1: Any, obj2: Any, path: str = "") -> List[str]:
@@ -178,7 +446,7 @@ def compare_structure(obj1: Any, obj2: Any, path: str = "") -> List[str]:
 # =============================================================================
 
 def parse_extract_node(state: WorkflowState) -> Dict[str, Any]:
-    """Extract ALL text values and save locked fields."""
+    """Extract ALL text values, save locked fields, and extract entities with LLM."""
     logger.info("=" * 60)
     logger.info("NODE: Parse & Extract")
     logger.info("=" * 60)
@@ -211,13 +479,36 @@ def parse_extract_node(state: WorkflowState) -> Dict[str, Any]:
     logger.info(f"  Old scenario: {old_scenario[:50]}...")
     logger.info(f"  New scenario: {new_scenario[:50]}...")
     
+    # LLM-based entity extraction (run in parallel for both scenarios)
+    logger.info("  Extracting entities with LLM (parallel)...")
+    
+    # Get a sample of JSON content to help LLM understand context
+    json_sample = ""
+    if topic_data.get("workplaceScenario"):
+        json_sample = json.dumps(topic_data["workplaceScenario"], indent=2)[:500]
+    
+    async def extract_both():
+        old_task = extract_entities_with_llm(old_scenario, json_sample)
+        new_task = extract_entities_with_llm(new_scenario, "")
+        return await asyncio.gather(old_task, new_task)
+    
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    old_entities, new_entities = loop.run_until_complete(extract_both())
+    loop.close()
+    
+    logger.info(f"  OLD entities: company={old_entities['primary_company']}, competitor={old_entities['competitor']}")
+    logger.info(f"  NEW entities: company={new_entities['primary_company']}, competitor={new_entities['competitor']}")
+    
     return {
         "old_scenario": old_scenario,
         "new_scenario": new_scenario,
+        "old_entities": old_entities,
+        "new_entities": new_entities,
         "locked_fields": locked_fields,
         "text_values": text_values,
         "start_time": start_time,
-        "llm_call_count": 0,
+        "llm_call_count": 2,  # 2 LLM calls for entity extraction
         "retry_count": 0,
         "failed_paths": [],
     }
@@ -375,39 +666,81 @@ async def rewrite_batch(
     batch: List[Dict], 
     old_scenario: str, 
     new_scenario: str, 
-    old_brands: str,
-    new_brands: str,
+    few_shot_examples: str,
     batch_num: int,
-    is_large_text: bool = False
 ) -> List[str]:
-    """Rewrite a batch of texts using LLM.
+    """Rewrite a batch of texts using LLM with full scenario context and few-shot examples.
     
-    Uses compressed brand info for small batches, full scenarios for large texts.
+    Every batch gets the same comprehensive context to ensure consistency.
     """
-    logger.info(f"      [Batch {batch_num}] Starting ({len(batch)} texts, large={is_large_text})...")
+    logger.info(f"      [Batch {batch_num}] Starting ({len(batch)} texts)...")
     start = time.time()
     
     # Format texts with numbers - FULL TEXT, NO SLICING
     text_list = "\n".join([f"[{i+1}] {t['original']}" for i, t in enumerate(batch)])
     
-    # Always use full scenarios - compressed brand names caused quality issues
-    # (LLM confused "Buy One Get One" promotion as a company name)
-    scenario_info = f"OLD SCENARIO: {old_scenario}\n\nNEW SCENARIO: {new_scenario}"
-    
-    # Compact prompt to reduce tokens
-    system_prompt = f"""Rewrite texts replacing old scenario references with new ones.
+    # Comprehensive prompt with full scenarios and few-shot examples
+    system_prompt = f"""You are re-contextualizing educational simulation content from one business scenario to another.
 
-RULES:
-1. Replace ALL old references (brands, companies, emails, URLs, names)
-2. Keep structure, tone, length, formatting (HTML/markdown intact)
-3. Generic content stays unchanged
-4. Return each text as [1], [2], etc. on its own line
+═══════════════════════════════════════════════════════════════════════════════
+CURRENT SCENARIO (what the content currently reflects):
+{old_scenario}
 
-{scenario_info}"""
+TARGET SCENARIO (what the content MUST reflect after your transformation):
+{new_scenario}
+═══════════════════════════════════════════════════════════════════════════════
+
+TRANSFORMATION EXAMPLES - Learn the pattern:
+────────────────────────────────────────────
+{few_shot_examples}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+CRITICAL RULES:
+1. IDENTIFY corresponding elements between scenarios:
+   - Primary company/brand (the one facing the challenge)
+   - Competitor company/brand (the one causing the challenge)
+   - The competitive challenge/promotion type
+   - Industry context (food→fashion, airline→retail, etc.)
+   - Person names, email domains, URLs
+
+2. REPLACE ALL old scenario references with corresponding new ones:
+   - Every brand mention → new brand
+   - Every competitor mention → new competitor  
+   - Every promotion/challenge reference → new promotion
+   - Every email domain → new domain (e.g., @oldbrand.com → @newbrand.com)
+   - Industry-specific terms → appropriate new industry terms
+   - PERSON NAMES: Generate NEW appropriate names for the new scenario context
+     (e.g., if original has "Mark Caldwell", create a new name like "Sarah Chen" or "Alex Rivera")
+
+3. ADAPT PRICING & METRICS to be INDUSTRY-APPROPRIATE:
+   - If changing from food to fashion: $2-$3 items → $25-$35 items, $7-$8 items → $70-$80 items
+   - If changing from fashion to food: $50-$70 items → $5-$7 items
+   - Scale ALL dollar amounts proportionally to fit the new industry's typical price points
+   - Keep percentages (%), timeframes, and relative comparisons the same
+   - Example: "menu items at $2-$3" in food → "apparel items at $25-$35" in fashion
+
+4. BE 100% CONSISTENT:
+   - Same entity = same replacement EVERYWHERE
+   - If you change a person's name in one place, use the SAME new name everywhere
+   - NEVER mix old and new references in the same text
+   - If unsure, use the NEW scenario terminology
+
+5. PRESERVE:
+   - Structure, formatting (HTML/markdown intact)
+   - Tone and style
+   - Generic content that doesn't reference the scenario
+
+6. OUTPUT FORMAT:
+   - Return each text as [1], [2], etc. on its own line
+   - Keep the FULL text, don't truncate
+
+The output should read as if it was ORIGINALLY written for the target scenario.
+NO TRACES of the old scenario should remain - including old person names and unrealistic pricing!"""
 
     messages = [
         SystemMessage(content=system_prompt),
-        HumanMessage(content=f"TEXTS:\n{text_list}\n\nRewritten:"),
+        HumanMessage(content=f"TEXTS TO TRANSFORM:\n{text_list}\n\nTransformed texts:"),
     ]
     
     response = await llm.ainvoke(messages)
@@ -440,7 +773,7 @@ RULES:
 
 
 def generate_node(state: WorkflowState) -> Dict[str, Any]:
-    """Rewrite text values in parallel batches."""
+    """Rewrite text values in parallel batches with consistent context."""
     logger.info("=" * 60)
     logger.info("NODE: Generate (LLM Rewrite)")
     logger.info("=" * 60)
@@ -463,24 +796,22 @@ def generate_node(state: WorkflowState) -> Dict[str, Any]:
     section_count = sum(len(v) for v in split_map.values())
     logger.info(f"  Processing {len(to_process)} texts in {len(batches)} batches ({len(split_map)} texts split into {section_count} sections)")
     
-    # Get compressed scenario info for prompts
-    old_brands, new_brands = get_compressed_scenario_info(state["old_scenario"], state["new_scenario"])
-    logger.info(f"  Old brands: {old_brands[:80]}...")
-    logger.info(f"  New brands: {new_brands[:80]}...")
+    # Build few-shot examples from scenarios - SAME for ALL batches for consistency
+    few_shot_examples = build_few_shot_examples(state["old_scenario"], state["new_scenario"])
+    logger.info(f"  Generated few-shot examples for transformation")
     
     llm = ChatOpenAI(model=GENERATION_MODEL, temperature=MODEL_TEMPERATURE, api_key=OPENAI_API_KEY)
     
     async def run_all():
         tasks = []
         for i, b in enumerate(batches):
-            # Check if this is a section from a split text (needs full context)
-            is_section = len(b) == 1 and "_parent_path" in b[0]
-            is_large = len(b) == 1 and len(b[0]["original"]) > LARGE_TEXT_THRESHOLD
+            # ALL batches get the SAME context (full scenarios + few-shot examples)
+            # This ensures consistency across all transformations
             tasks.append(rewrite_batch(
                 llm, b, 
                 state["old_scenario"], state["new_scenario"],
-                old_brands, new_brands,
-                i+1, is_large or is_section  # Sections get full scenario context
+                few_shot_examples,
+                i+1
             ))
         return await asyncio.gather(*tasks, return_exceptions=True)
     
@@ -554,7 +885,7 @@ def assemble_node(state: WorkflowState) -> Dict[str, Any]:
 # =============================================================================
 
 def validate_node(state: WorkflowState) -> Dict[str, Any]:
-    """Validate schema, locked fields, and check for old scenario leakage."""
+    """Validate schema, locked fields, and check for old scenario leakage using LLM-extracted entities."""
     logger.info("=" * 60)
     logger.info("NODE: Validate")
     logger.info("=" * 60)
@@ -571,19 +902,52 @@ def validate_node(state: WorkflowState) -> Dict[str, Any]:
                  state["locked_fields"]["topicWizardData.scenarioOptions"])
     logger.info(f"  Locked fields: {'OK' if locked_ok else 'FAILED'}")
     
-    # 3. Leakage check - find old BRAND NAMES in output (not generic words)
-    old_brands = get_old_brand_names(state["old_scenario"], state["new_scenario"])
+    # 3. Comprehensive leakage check using LLM-extracted entities (more robust)
+    old_entities = state.get("old_entities")
+    new_entities = state.get("new_entities")
+    
+    if old_entities and new_entities:
+        # Use LLM-extracted entities (more robust)
+        old_markers = get_old_markers_from_entities(old_entities, new_entities)
+        logger.info(f"  Using LLM-extracted entities for validation")
+    else:
+        # Fallback to regex-based extraction
+        old_markers = get_old_scenario_markers(state["old_scenario"], state["new_scenario"])
+        logger.info(f"  Using regex-based extraction for validation (fallback)")
+    
+    # Also add person names from original JSON (LLM-extracted or regex-based)
+    if old_entities and old_entities.get("person_names"):
+        for name in old_entities["person_names"]:
+            if name and name.lower() not in old_markers:
+                old_markers.append(name.lower())
+    else:
+        # Fallback: extract person names from JSON structure
+        old_person_names = extract_json_person_names(state["input_json"])
+        for name in old_person_names:
+            name_lower = name.lower()
+            if name_lower not in old_markers and len(name_lower) > 3:
+                old_markers.append(name_lower)
+    
+    logger.info(f"  Checking for {len(old_markers)} old scenario markers: {old_markers[:8]}...")
     
     failed_paths = []
+    failed_details = []  # Track what was found for better debugging
+    
     for t in state.get("text_values", []):
         if "scenarioOptions" in t["path"]:
             continue  # Skip locked field
         if t.get("rewritten"):
             text_lower = t["rewritten"].lower()
-            for brand in old_brands:
-                if brand in text_lower:
+            for marker in old_markers:
+                if marker in text_lower:
                     failed_paths.append(t["path"])
+                    failed_details.append(f"{t['path']}: found '{marker}'")
                     break
+    
+    if failed_details:
+        logger.warning(f"  Leakage found in {len(failed_paths)} fields:")
+        for detail in failed_details[:5]:  # Show first 5
+            logger.warning(f"    - {detail}")
     
     consistency = "OK" if not failed_paths else f"FAILED: {len(failed_paths)} texts have old references"
     logger.info(f"  Consistency: {consistency}")
